@@ -1,0 +1,12 @@
+MonoAsteroids
+Copyright (C) 2022 Alexei Evdokimenko <aevdokimenkosd@gmail.com>
+
+This product includes MonoGame framework
+distributed under the terms of Microsoft Public License (Ms-PL)
+Copyright (C) 2009-2021 The MonoGame Team
+All rights reserved (https://www.monogame.net/).
+
+This product includes Aether.Physics2D collision detection system
+distributed under the terms of Microsoft Public License (Ms-PL)
+Copyright (C) 2017-2021 Kastellanos Nikolaos
+All rights reserved (https://github.com/tainicom/Aether.Physics2D).

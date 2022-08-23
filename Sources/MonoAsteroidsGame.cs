@@ -1,0 +1,52 @@
+﻿/*
+ * Copyright (C) 2022 Alexei Evdokimenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+using Microsoft.Xna.Framework;
+
+namespace MonoAsteroids;
+
+public class MonoAsteroidsGame : Game
+{
+    private const int DEFAULT_BACKBUFFER_WIDTH = 1280;
+    private const int DEFAULT_BACKBUFFER_HEIGHT = 720;
+
+    private readonly GraphicsDeviceManager _graphics;
+
+    public MonoAsteroidsGame()
+    {
+        _graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
+        IsMouseVisible = true;
+    }
+
+    protected override void Initialize()
+    {        
+        _graphics.IsFullScreen = false;
+        _graphics.PreferredBackBufferWidth = DEFAULT_BACKBUFFER_WIDTH;
+        _graphics.PreferredBackBufferHeight = DEFAULT_BACKBUFFER_HEIGHT;
+        _graphics.ApplyChanges();
+
+        var core = new Core(this);
+        var renderer = new Renderer(this, core);
+        var inputManager = new InputManager(this, core);
+
+        Components.Add(core);
+        Components.Add(renderer);
+        Components.Add(inputManager);
+
+        base.Initialize();
+    }
+}
