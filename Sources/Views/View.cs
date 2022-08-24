@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoAsteroids;
 
-public partial class Renderer : DrawableGameComponent, IGameObjectsVisitor
+public partial class View : DrawableGameComponent, IGameObjectsVisitor
 {
-    private readonly Core _core;
+    private readonly Model _model;
     private Matrix _viewportScaleMatrix;
     private SpriteBatch _spriteBatch;
-    private Texture2D _dummy;
 
-    public Renderer(Game game, Core core) : base(game)
+    public View(Game game, Model Model) : base(game)
     {
-        _core = core;
+        _model = Model;
     }
 
     public override void Initialize()
     {
         var viewport = Game.GraphicsDevice.Viewport;
-        var scaleX = viewport.Width / Core.VIRTUAL_WORLD_WIDTH;
-        var scaleY = viewport.Height / Core.VIRTUAL_WORLD_HEIGHT;
+        var scaleX = viewport.Width / Model.WORLD_WIDTH;
+        var scaleY = viewport.Height / Model.WORLD_HEIGHT;
         _viewportScaleMatrix = Matrix.CreateScale(scaleX, scaleY, 1.0f);
 
         base.Initialize();
@@ -45,13 +44,17 @@ public partial class Renderer : DrawableGameComponent, IGameObjectsVisitor
     {
         _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
-        _dummy = new Texture2D(Game.GraphicsDevice, 1, 1);
-        _dummy.SetData(new[] { Color.White });
+        LoadStarship();
+        LoadAsteroid();
+        LoadUfo();
     }
 
     protected override void UnloadContent()
     {
-        _dummy.Dispose();
+        UnloadStarship();
+        UnloadAsteroid();
+        UnloadUfo();
+
         _spriteBatch.Dispose();
     }
 
@@ -60,7 +63,7 @@ public partial class Renderer : DrawableGameComponent, IGameObjectsVisitor
         Game.GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin(transformMatrix: _viewportScaleMatrix);
-        _core.Visit(this);
+        _model.Visit(this);
         _spriteBatch.End();
     }
 }

@@ -13,13 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
+using Microsoft.Xna.Framework;
+
 namespace MonoAsteroids;
 
-public class Ufo : GameObject
+public partial class View
 {
-    public override void Visit(IGameObjectsVisitor visitor)
+    private TextureDrawable _asteroidDrawable;
+
+    public void LoadAsteroid()
     {
-        visitor.Visit(this);
+        _asteroidDrawable = new TextureDrawable(Game.Content, "AsteroidSprite");
+    }
+
+    public void UnloadAsteroid()
+    {
+        _asteroidDrawable.Dispose();
+    }
+
+    public void Visit(Asteroid asteroid)
+    {
+        _asteroidDrawable.Draw(_spriteBatch, asteroid);
     }
 }

@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
 
-public abstract class GameObject
+public partial class View
 {
-    public Vector2 Size { get; set; }
+    private TextureDrawable _ufoDrawable;
 
-    public virtual Vector2 Position { get; set; }
-
-    public abstract void Visit(IGameObjectsVisitor visitor);
-
-    public virtual void Update(GameTime gameTime)
+    public void LoadUfo()
     {
+        _ufoDrawable = new TextureDrawable(Game.Content, "UfoSprite");
+    }
+
+    public void UnloadUfo()
+    {
+        _ufoDrawable.Dispose();
+    }
+
+    public void Visit(Ufo ufo)
+    {
+        _ufoDrawable.Draw(_spriteBatch, ufo);
     }
 }

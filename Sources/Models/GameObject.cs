@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using tainicom.Aether.Physics2D.Dynamics;
 
 namespace MonoAsteroids;
 
-public partial class Renderer
+public abstract class GameObject : Body
 {
-    public void Visit(Starship starship)
-    {
-        Body body = starship.Body;
+    public Vector2 Size { get; set; }
 
-        _spriteBatch.Draw(_dummy, body.Position, null, Color.Green, body.Rotation, body.LocalCenter, starship.Size,
-                SpriteEffects.None, 0f);
-    }
+    public virtual void Update(GameTime gameTime) {}
+
+    public abstract void Visit(IGameObjectsVisitor visitor);
 }

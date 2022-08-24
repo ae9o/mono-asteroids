@@ -16,9 +16,10 @@
 
 namespace MonoAsteroids;
 
-public partial class Renderer
+public class Ufo : GameObject
 {
-    public void Visit(Ufo ufo)
+    public override void Visit(IGameObjectsVisitor visitor)
     {
+        visitor.Visit(this);
     }
 }

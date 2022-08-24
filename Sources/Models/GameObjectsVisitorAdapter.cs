@@ -16,9 +16,11 @@
 
 namespace MonoAsteroids;
 
-public partial class Renderer
+public class GameObjectsVisitorAdapter : IGameObjectsVisitor
 {
-    public void Visit(Asteroid asteroid)
-    {
-    }
+    public virtual void Visit(Starship starship) {}
+
+    public virtual void Visit(Ufo ufo) {}
+
+    public virtual void Visit(Asteroid asteroid) {}
 }

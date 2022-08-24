@@ -13,13 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
+using Microsoft.Xna.Framework;
+
 namespace MonoAsteroids;
 
-public class Asteroid : GameObject
+public partial class View
 {
-    public override void Visit(IGameObjectsVisitor visitor)
+    private TextureDrawable _starshipDrawable;
+
+    public void LoadStarship()
     {
-        visitor.Visit(this);
+        _starshipDrawable = new TextureDrawable(Game.Content, "StarshipSprite");
+    }
+
+    public void UnloadStarship()
+    {
+        _starshipDrawable.Dispose();
+    }
+
+    public void Visit(Starship starship)
+    {
+        _starshipDrawable.Draw(_spriteBatch, starship);
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
@@ -33,19 +33,19 @@ public class MonoAsteroidsGame : Game
     }
 
     protected override void Initialize()
-    {        
+    {
         _graphics.IsFullScreen = false;
         _graphics.PreferredBackBufferWidth = DEFAULT_BACKBUFFER_WIDTH;
         _graphics.PreferredBackBufferHeight = DEFAULT_BACKBUFFER_HEIGHT;
         _graphics.ApplyChanges();
 
-        var core = new Core(this);
-        var renderer = new Renderer(this, core);
-        var inputManager = new InputManager(this, core);
+        var model = new Model(this);
+        var view = new View(this, model);
+        var inputController = new InputController(this, model);
 
-        Components.Add(core);
-        Components.Add(renderer);
-        Components.Add(inputManager);
+        Components.Add(model);
+        Components.Add(view);
+        Components.Add(inputController);
 
         base.Initialize();
     }

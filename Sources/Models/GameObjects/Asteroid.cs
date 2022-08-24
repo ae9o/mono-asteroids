@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
+using tainicom.Aether.Physics2D.Dynamics;
+
 namespace MonoAsteroids;
 
-public class GameObjectsVisitorAdapter : IGameObjectsVisitor
+public class Asteroid : GameObject
 {
-    public virtual void Visit(Starship starship)
+    public Asteroid()
     {
+        BodyType = BodyType.Dynamic;
     }
 
-    public virtual void Visit(Ufo ufo)
+    public override void Visit(IGameObjectsVisitor visitor)
     {
-    }
-
-    public virtual void Visit(Asteroid asteroid)
-    {
+        visitor.Visit(this);
     }
 }

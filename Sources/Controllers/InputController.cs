@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace MonoAsteroids;
 
-public class InputManager : GameComponent
+public class InputController : GameComponent
 {
-    private readonly Core _core;
+    private readonly Model _core;
 
-    public InputManager(Game game, Core core) : base(game)
+    public InputController(Game game, Model core) : base(game)
     {
         _core = core;
     }
@@ -37,19 +37,19 @@ public class InputManager : GameComponent
             Game.Exit();
         }
 
-        if (keyboard.IsKeyDown(Keys.W))
-        {   
+        if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
+        {
             _core.Starship.Engage();
         }
 
-        if (keyboard.IsKeyDown(Keys.A))
+        if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
         {
-            _core.Starship.TurnLeft();
+            _core.Starship.RotateLeft((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
-        
-        if (keyboard.IsKeyDown(Keys.D))
+
+        if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
         {
-            _core.Starship.TurnRight();
+            _core.Starship.RotateRight((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         base.Update(gameTime);
