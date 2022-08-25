@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using tainicom.Aether.Physics2D.Dynamics;
-using tainicom.Aether.Physics2D.Dynamics.Contacts;
+using MonoGame.Extended.Timers;
 
 namespace MonoAsteroids;
 
-public class Starship : GameObject, IGameObjectsVisitor
+public class Starship : GameObject
 {
-    private static readonly Vector2 UP_DIRECTION = -Vector2.UnitY;
-
-    public Starship()
-    {
-        BodyType = BodyType.Dynamic;
-        OnCollision += HandleCollision;
-    }
+    private readonly CountdownTimer _bulletCooldownTimer = new CountdownTimer(0);
+    private readonly CountdownTimer _laserCooldownTimer = new CountdownTimer(0);
+    private readonly Stack<Bullet> _bullets = new Stack<Bullet>();
+    private readonly Stack<LaserRay> _laserRays = new Stack<LaserRay>();
 
     public float EngageImpulse { get; set; }
 
     public float RotationSpeed { get; set; }
 
+    public float BulletCooldown { get; set; }
+
+    public float LaserCooldown { get; set; }
+
     public void Engage()
     {
-        ApplyLinearImpulse(GetWorldVector(UP_DIRECTION) * EngageImpulse);
+        ApplyLinearImpulse(LookDirection * EngageImpulse);
     }
 
     public void RotateLeft(float delta)
@@ -49,23 +51,72 @@ public class Starship : GameObject, IGameObjectsVisitor
         Rotation += RotationSpeed * delta;
     }
 
-    private bool HandleCollision(Fixture sender, Fixture other, Contact contact)
+    public void FireBullet()
     {
-        ((GameObject)other.Body).Visit(this);
-        return true;
+        if (_bulletCooldownTimer.State == TimerState.Started)
+        {
+            return;
+        }
+
+        if (_bullets.Count == 0)
+        {
+            return;
+        }
+
+        FireProjectile(_bullets.Pop());
+
+        _bulletCooldownTimer.Interval = TimeSpan.FromSeconds(BulletCooldown);
+        _bulletCooldownTimer.Restart();
     }
 
-    public void Visit(Asteroid asteroid)
+    public void FireLaser()
     {
-        System.Console.WriteLine("Collide");
+        if (_laserCooldownTimer.State == TimerState.Started)
+        {
+            return;
+        }
+
+        if (_laserRays.Count == 0)
+        {
+            return;
+        }
+
+        FireProjectile(_laserRays.Pop());
+
+        _laserCooldownTimer.Interval = TimeSpan.FromSeconds(LaserCooldown);
+        _laserCooldownTimer.Restart();
     }
 
-    public void Visit(Ufo ufo)
+    private void FireProjectile(Projectile projectile)
     {
+        Model.Add(projectile);
+        projectile.Position = Position;
+        projectile.Rotation = Rotation;
+        projectile.Fire(LookDirection);
     }
 
-    public void Visit(Starship starship)
+    public void Add(Bullet bullet)
     {
+        bullet.Removed += OnBulletRemoved;
+        _bullets.Push(bullet);
+    }
+
+    public void Add(LaserRay ray)
+    {
+        _laserRays.Push(ray);
+    }
+
+    private void OnBulletRemoved(object sender, EventArgs args)
+    {
+        _bullets.Push((Bullet)sender);
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        _bulletCooldownTimer.Update(gameTime);
+        _laserCooldownTimer.Update(gameTime);
     }
 
     public override void Visit(IGameObjectsVisitor visitor)

@@ -14,16 +14,75 @@
  * limitations under the License.
  */
 
+using System;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using tainicom.Aether.Physics2D.Dynamics;
 
 namespace MonoAsteroids;
 
-public abstract class GameObject : Body
+public abstract class GameObject : Body, IUpdate
 {
+    public event EventHandler Added;
+    public event EventHandler Removed;
+    public event EventHandler FlewOutOfWorld;
+
+    private Model _model;
+
+    public GameObject()
+    {
+        BodyType = BodyType.Dynamic;
+    }
+
+    public Model Model
+    {
+        get => _model;
+
+        set
+        {
+            if (_model == value)
+            {
+                return;
+            }
+
+            _model = value;
+
+            if (value != null)
+            {
+                OnAdded();
+            }
+            else
+            {
+                OnRemoved();
+            }
+        }
+    }
+
     public Vector2 Size { get; set; }
+
+    public Vector2 LookDirection => GetWorldVector(Model.WorldUpDirection);
 
     public virtual void Update(GameTime gameTime) {}
 
     public abstract void Visit(IGameObjectsVisitor visitor);
+
+    public void Remove()
+    {
+        Model?.Remove(this);
+    }
+
+    public virtual void OnAdded()
+    {
+        Added?.Invoke(this, EventArgs.Empty);
+    }
+
+    public virtual void OnRemoved()
+    {
+        Removed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public virtual void OnFlewOutOfWorld()
+    {
+        FlewOutOfWorld?.Invoke(this, EventArgs.Empty);
+    }
 }

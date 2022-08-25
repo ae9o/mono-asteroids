@@ -21,16 +21,17 @@ namespace MonoAsteroids;
 
 public class InputController : GameComponent
 {
-    private readonly Model _core;
+    private readonly Model _model;
 
-    public InputController(Game game, Model core) : base(game)
+    public InputController(Game game, Model model) : base(game)
     {
-        _core = core;
+        _model = model;
     }
 
     public override void Update(GameTime gameTime)
     {
         var keyboard = Keyboard.GetState();
+        var mouse = Mouse.GetState();
 
         if (keyboard.IsKeyDown(Keys.Escape))
         {
@@ -39,17 +40,27 @@ public class InputController : GameComponent
 
         if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
         {
-            _core.Starship.Engage();
+            _model.Starship.Engage();
         }
 
         if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
         {
-            _core.Starship.RotateLeft((float)gameTime.ElapsedGameTime.TotalSeconds);
+            _model.Starship.RotateLeft((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
         {
-            _core.Starship.RotateRight((float)gameTime.ElapsedGameTime.TotalSeconds);
+            _model.Starship.RotateRight((float)gameTime.ElapsedGameTime.TotalSeconds);
+        }
+
+        if (mouse.LeftButton == ButtonState.Pressed)
+        {
+            _model.Starship.FireBullet();
+        }
+
+        if (mouse.RightButton == ButtonState.Pressed)
+        {
+            _model.Starship.FireLaser();
         }
 
         base.Update(gameTime);

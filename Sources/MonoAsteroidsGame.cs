@@ -20,8 +20,8 @@ namespace MonoAsteroids;
 
 public class MonoAsteroidsGame : Game
 {
-    private const int DEFAULT_BACKBUFFER_WIDTH = 1280;
-    private const int DEFAULT_BACKBUFFER_HEIGHT = 720;
+    private const int DefaultBackBufferWidth = 1280;
+    private const int DefaultBackBufferHeight = 720;
 
     private readonly GraphicsDeviceManager _graphics;
 
@@ -35,8 +35,8 @@ public class MonoAsteroidsGame : Game
     protected override void Initialize()
     {
         _graphics.IsFullScreen = false;
-        _graphics.PreferredBackBufferWidth = DEFAULT_BACKBUFFER_WIDTH;
-        _graphics.PreferredBackBufferHeight = DEFAULT_BACKBUFFER_HEIGHT;
+        _graphics.PreferredBackBufferWidth = DefaultBackBufferWidth;
+        _graphics.PreferredBackBufferHeight = DefaultBackBufferHeight;
         _graphics.ApplyChanges();
 
         var model = new Model(this);

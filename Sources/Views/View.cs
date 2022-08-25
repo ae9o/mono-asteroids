@@ -32,12 +32,12 @@ public partial class View : DrawableGameComponent, IGameObjectsVisitor
 
     public override void Initialize()
     {
-        var viewport = Game.GraphicsDevice.Viewport;
-        var scaleX = viewport.Width / Model.WORLD_WIDTH;
-        var scaleY = viewport.Height / Model.WORLD_HEIGHT;
-        _viewportScaleMatrix = Matrix.CreateScale(scaleX, scaleY, 1.0f);
-
         base.Initialize();
+
+        var viewport = Game.GraphicsDevice.Viewport;
+        var scaleX = viewport.Width / Model.WorldWidth;
+        var scaleY = viewport.Height / Model.WorldHeight;
+        _viewportScaleMatrix = Matrix.CreateScale(scaleX, scaleY, 1.0f);
     }
 
     protected override void LoadContent()
@@ -65,5 +65,15 @@ public partial class View : DrawableGameComponent, IGameObjectsVisitor
         _spriteBatch.Begin(transformMatrix: _viewportScaleMatrix);
         _model.Visit(this);
         _spriteBatch.End();
+    }
+
+    public void Visit(Bullet bullet)
+    {
+        _ufoDrawable.Draw(_spriteBatch, bullet);
+    }
+
+    public void Visit(LaserRay ray)
+    {
+        _ufoDrawable.Draw(_spriteBatch, ray);
     }
 }

@@ -16,15 +16,10 @@
 
 namespace MonoAsteroids;
 
-public class GameObjectsVisitorAdapter : IGameObjectsVisitor
+public class Bullet : Projectile
 {
-    public virtual void Visit(Starship starship) {}
-
-    public virtual void Visit(Ufo ufo) {}
-
-    public virtual void Visit(Asteroid asteroid) {}
-
-    public virtual void Visit(Bullet bullet) {}
-
-    public virtual void Visit(LaserRay ray) {}
+    public override void Visit(IGameObjectsVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
 }

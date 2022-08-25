@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-using tainicom.Aether.Physics2D.Dynamics;
-
 namespace MonoAsteroids;
 
 public class Asteroid : GameObject
 {
-    public Asteroid()
-    {
-        BodyType = BodyType.Dynamic;
-    }
-
     public override void Visit(IGameObjectsVisitor visitor)
     {
         visitor.Visit(this);

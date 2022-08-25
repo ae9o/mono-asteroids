@@ -21,17 +21,26 @@ namespace MonoAsteroids;
 
 public static class GameObjectFactory
 {
-    public static Starship NewStarship()
+    public static Starship NewDefaultStarship()
     {
         Starship starship = new Starship();
         starship.Size = new Vector2(0.1f, 0.1f);
-        starship.LinearDamping = 0.5f;
+        starship.LinearDamping = 5f;
         starship.AngularDamping = 10f;
         starship.EngageImpulse = 0.001f;
         starship.RotationSpeed = 10;
+        starship.BulletCooldown = 0.2f;
+        starship.LaserCooldown = 0.2f;
 
         var fixture = starship.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat1;
+        fixture.IsSensor = true;
+
+        for (int i = 0; i < 20; ++i)
+        {
+            starship.Add(NewDefaultBullet());
+            starship.Add(NewDefaultLaserRay());
+        }
 
         return starship;
     }
@@ -43,8 +52,37 @@ public static class GameObjectFactory
 
         var fixture = asteroid.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat2;
-        fixture.CollidesWith = Category.Cat1;
+        fixture.CollidesWith = Category.Cat1 | Category.Cat3;
 
         return asteroid;
+    }
+
+    public static Bullet NewDefaultBullet()
+    {
+        Bullet bullet = new Bullet();
+        bullet.Size = new Vector2(0.01f, 0.01f);
+        bullet.Speed = 1f;
+        bullet.RemoveSelfOnCollision = true;
+
+        var fixture = bullet.CreateRectangle(0.01f, 0.01f, 1f, Vector2.Zero);
+        fixture.CollisionCategories = Category.Cat3;
+        fixture.CollidesWith = Category.Cat2;
+        fixture.IsSensor = true;
+
+        return bullet;
+    }
+
+    public static LaserRay NewDefaultLaserRay()
+    {
+        LaserRay ray = new LaserRay();
+        ray.Size = new Vector2(0.01f, 0.05f);
+        ray.Speed = 1f;
+
+        var fixture = ray.CreateRectangle(0.01f, 0.05f, 1f, Vector2.Zero);
+        fixture.CollisionCategories = Category.Cat3;
+        fixture.CollidesWith = Category.Cat2;
+        fixture.IsSensor = true;
+
+        return ray;
     }
 }

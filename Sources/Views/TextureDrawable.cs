@@ -23,7 +23,7 @@ namespace MonoAsteroids;
 
 public class TextureDrawable : IDrawable, IDisposable
 {
-    private const float CENTER_ORIGIN = 0.5f;
+    private const float CenterOrigin = 0.5f;
 
     private readonly Texture2D _texture;
     private readonly Vector2 _textureSize;
@@ -33,7 +33,7 @@ public class TextureDrawable : IDrawable, IDisposable
     {
         _texture = contentManager.Load<Texture2D>(contentName);
         _textureSize = new Vector2(_texture.Width, _texture.Height);
-        _textureOrigin = _textureSize * CENTER_ORIGIN;
+        _textureOrigin = _textureSize * CenterOrigin;
     }
 
     public void Dispose()

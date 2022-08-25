@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 namespace MonoAsteroids;
 
 public interface IGameObjectsVisitor
 {
     void Visit(Starship starship);
+
     void Visit(Ufo ufo);
+
     void Visit(Asteroid asteroid);
+
+    void Visit(Bullet bullet);
+
+    void Visit(LaserRay ray);
 }
