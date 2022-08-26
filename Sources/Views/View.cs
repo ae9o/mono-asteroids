@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoAsteroids;
 
-public partial class View : DrawableGameComponent, IGameObjectsVisitor
+public partial class View : DrawableGameComponent
 {
+    private readonly Dictionary<Type, IDrawable> _drawables = new Dictionary<Type, IDrawable>();
     private readonly Model _model;
     private Matrix _viewportScaleMatrix;
     private SpriteBatch _spriteBatch;
@@ -33,7 +36,11 @@ public partial class View : DrawableGameComponent, IGameObjectsVisitor
     public override void Initialize()
     {
         base.Initialize();
+        ScaleViewport();
+    }
 
+    private void ScaleViewport()
+    {
         var viewport = Game.GraphicsDevice.Viewport;
         var scaleX = viewport.Width / Model.WorldWidth;
         var scaleY = viewport.Height / Model.WorldHeight;
@@ -43,19 +50,35 @@ public partial class View : DrawableGameComponent, IGameObjectsVisitor
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-
-        LoadStarship();
-        LoadAsteroid();
-        LoadUfo();
+        LoadDrawables();
     }
 
     protected override void UnloadContent()
     {
-        UnloadStarship();
-        UnloadAsteroid();
-        UnloadUfo();
-
+        UnloadDrawables();
         _spriteBatch.Dispose();
+    }
+
+    private void LoadDrawables()
+    {
+        var content = Game.Content;
+        _drawables.Add(typeof(Starship), new TextureDrawable(content, "StarshipSprite"));
+        _drawables.Add(typeof(Asteroid), new TextureDrawable(content, "AsteroidSprite"));
+        _drawables.Add(typeof(Ufo), new TextureDrawable(content, "UfoSprite"));
+        _drawables.Add(typeof(Bullet), new TextureDrawable(content, "BulletSprite"));
+        _drawables.Add(typeof(LaserRay), new TextureDrawable(content, "LaserRaySprite"));
+    }
+
+    private void UnloadDrawables()
+    {
+        foreach (var drawable in _drawables)
+        {
+            if (drawable.Value is IDisposable)
+            {
+                ((IDisposable)drawable.Value).Dispose();
+            }
+        }
+        _drawables.Clear();
     }
 
     public override void Draw(GameTime gameTime)
@@ -63,17 +86,13 @@ public partial class View : DrawableGameComponent, IGameObjectsVisitor
         Game.GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin(transformMatrix: _viewportScaleMatrix);
-        _model.Visit(this);
+        foreach (var obj in _model)
+        {
+            if (_drawables.TryGetValue(obj.GetType(), out var drawable))
+            {
+                drawable.Draw(_spriteBatch, obj);
+            }
+        }
         _spriteBatch.End();
-    }
-
-    public void Visit(Bullet bullet)
-    {
-        _ufoDrawable.Draw(_spriteBatch, bullet);
-    }
-
-    public void Visit(LaserRay ray)
-    {
-        _ufoDrawable.Draw(_spriteBatch, ray);
     }
 }

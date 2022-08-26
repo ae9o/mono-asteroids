@@ -64,8 +64,6 @@ public abstract class GameObject : Body, IUpdate
 
     public virtual void Update(GameTime gameTime) {}
 
-    public abstract void Visit(IGameObjectsVisitor visitor);
-
     public void Remove()
     {
         Model?.Remove(this);

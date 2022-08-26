@@ -18,8 +18,4 @@ namespace MonoAsteroids;
 
 public class Asteroid : GameObject
 {
-    public override void Visit(IGameObjectsVisitor visitor)
-    {
-        visitor.Visit(this);
-    }
 }

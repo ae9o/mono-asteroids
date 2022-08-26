@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
@@ -23,7 +24,7 @@ using MonoGame.Extended.Collections;
 
 namespace MonoAsteroids;
 
-public class Model : GameComponent
+public class Model : GameComponent, IEnumerable<GameObject>
 {
     public const float WorldWidth = 1.66f;
     public const float WorldHeight = 1f;
@@ -186,11 +187,13 @@ public class Model : GameComponent
         }
     }
 
-    public void Visit(IGameObjectsVisitor visitor)
+    IEnumerator<GameObject> IEnumerable<GameObject>.GetEnumerator()
     {
-        foreach (var obj in _gameObjects)
-        {
-            obj.Visit(visitor);
-        }
+        return ((IEnumerable<GameObject>)_gameObjects).GetEnumerator();
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+        return ((System.Collections.IEnumerable)_gameObjects).GetEnumerator();
     }
 }

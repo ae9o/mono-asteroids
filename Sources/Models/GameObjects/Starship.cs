@@ -118,9 +118,4 @@ public class Starship : GameObject
         _bulletCooldownTimer.Update(gameTime);
         _laserCooldownTimer.Update(gameTime);
     }
-
-    public override void Visit(IGameObjectsVisitor visitor)
-    {
-        visitor.Visit(this);
-    }
 }

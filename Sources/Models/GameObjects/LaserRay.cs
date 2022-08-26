@@ -18,8 +18,4 @@ namespace MonoAsteroids;
 
 public class LaserRay : Projectile
 {
-    public override void Visit(IGameObjectsVisitor visitor)
-    {
-        visitor.Visit(this);
-    }
 }

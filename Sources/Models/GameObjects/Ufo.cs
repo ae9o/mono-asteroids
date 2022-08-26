@@ -18,8 +18,4 @@ namespace MonoAsteroids;
 
 public class Ufo : GameObject
 {
-    public override void Visit(IGameObjectsVisitor visitor)
-    {
-        visitor.Visit(this);
-    }
 }
