@@ -25,10 +25,19 @@ using MonoGame.Extended.Collections;
 
 namespace MonoAsteroids;
 
+public enum ModelState
+{
+    Fresh,
+    RoundStarted,
+    RoundFinished
+}
+
 public class Model : GameComponent, IEnumerable<GameObject>
 {
     public const float WorldWidth = 1.66f;
     public const float WorldHeight = 1f;
+    public const int InitialAsteroidCount = 3;
+    public const float AsteroidSpawnInterval = 10f;
 
     public static readonly Vector2 WorldCenter = new Vector2(WorldWidth * 0.5f, WorldHeight * 0.5f);
     public static readonly Vector2 WorldUpDirection = -Vector2.UnitY;
@@ -38,13 +47,19 @@ public class Model : GameComponent, IEnumerable<GameObject>
     private readonly Bag<GameObject> _removedGameObjects = new Bag<GameObject>();
     private bool _locked;
 
+    private ModelState _state = ModelState.Fresh;
     private World _world;
     private Starship _starship;
     private ContinuousClock _asteroidSpawnClock;
+    private int _score;
 
     public Model(Game game) : base(game)
     {
     }
+
+    public ModelState State => _state;
+
+    public int Score => _score;
 
     public Starship Starship => _starship;
 
@@ -55,14 +70,25 @@ public class Model : GameComponent, IEnumerable<GameObject>
         _world = new World();
         _world.Gravity = Vector2.Zero;
 
-        _asteroidSpawnClock = new ContinuousClock(10.0);
+        _asteroidSpawnClock = new ContinuousClock(AsteroidSpawnInterval);
         _asteroidSpawnClock.Tick += OnAsteroidSpawnClockTick;
+        _asteroidSpawnClock.Stop();
 
-        StartRound();
+        SpawnInitialAsteroids();
     }
 
     public void StartRound()
     {
+        if (_state == ModelState.RoundStarted)
+        {
+            throw new InvalidOperationException("Round has already been started.");
+        }
+
+        _state = ModelState.RoundStarted;
+        _score = 0;
+
+        Clear();
+
         _starship = GameObjectFactory.NewDefaultStarship();
         _starship.Position = WorldCenter;
         _starship.OnCollision += OnStarshipCollision;
@@ -70,11 +96,18 @@ public class Model : GameComponent, IEnumerable<GameObject>
 
         _asteroidSpawnClock.Restart();
 
-        SpawnLargeAsteroid();
+        SpawnInitialAsteroids();
     }
 
     public void FinishRound()
     {
+        if (_state != ModelState.RoundStarted)
+        {
+            return;
+        }
+
+        _state = ModelState.RoundFinished;
+
         _asteroidSpawnClock.Stop();
     }
 
@@ -86,7 +119,7 @@ public class Model : GameComponent, IEnumerable<GameObject>
 
     private bool OnStarshipCollision(Fixture sender, Fixture other, Contact contact)
     {
-        System.Console.WriteLine("Starship collision!");
+        FinishRound();
         return true;
     }
 
@@ -97,28 +130,41 @@ public class Model : GameComponent, IEnumerable<GameObject>
 
     private void SpawnLargeAsteroid()
     {
-        var smallShard1 = GameObjectFactory.NewSmallAsteroid();
-        var smallShard2 = GameObjectFactory.NewSmallAsteroid();
-        var smallShard3 = GameObjectFactory.NewSmallAsteroid();
-        var smallShard4 = GameObjectFactory.NewSmallAsteroid();
-
-        var mediumShard1 = GameObjectFactory.NewMediumAsteroid();
-        var mediumShard2 = GameObjectFactory.NewMediumAsteroid();
-
-        mediumShard1.Shards.Add(smallShard1);
-        mediumShard1.Shards.Add(smallShard2);
-
-        mediumShard2.Shards.Add(smallShard3);
-        mediumShard2.Shards.Add(smallShard4);
-
         var asteroid = GameObjectFactory.NewLargeAsteroid();
         asteroid.Position = Utils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
-        asteroid.LinearVelocity = Utils.Random.NextVector(0.1f, 0.5f);
-        asteroid.AngularVelocity = Utils.Random.NextSingle(-0.5f, 0.5f);
-        asteroid.Shards.Add(mediumShard1);
-        asteroid.Shards.Add(mediumShard2);
-
+        asteroid.LinearVelocity = Utils.Random.NextVector(0.1f, 0.3f);
+        asteroid.AngularVelocity = Utils.Random.NextSingle(-0.7f, 0.7f);
+        asteroid.ShardSupplier = MediumAsteroidSupplier;
+        asteroid.Broken += OnAsteroidBroken;
         Add(asteroid);
+    }
+
+    private Asteroid MediumAsteroidSupplier()
+    {
+        var asteroid = GameObjectFactory.NewMediumAsteroid();
+        asteroid.ShardSupplier = SmallAsteroidSupplier;
+        asteroid.Broken += OnAsteroidBroken;
+        return asteroid;
+    }
+
+    private Asteroid SmallAsteroidSupplier()
+    {
+        var asteroid = GameObjectFactory.NewSmallAsteroid();
+        asteroid.Broken += OnAsteroidBroken;
+        return asteroid;
+    }
+
+    private void OnAsteroidBroken(object sender, EventArgs args)
+    {
+        ++_score;
+    }
+
+    private void SpawnInitialAsteroids()
+    {
+        for (int i = 0; i < InitialAsteroidCount; ++i)
+        {
+            SpawnLargeAsteroid();
+        }
     }
 
     public override void Update(GameTime gameTime)
@@ -193,6 +239,18 @@ public class Model : GameComponent, IEnumerable<GameObject>
             _world.Remove(obj);
             obj.Model = null;
         }
+    }
+
+    public void Clear()
+    {
+        foreach (var obj in _gameObjects)
+        {
+            obj.Model = null;
+        }
+        _gameObjects.Clear();
+        _world.Clear();
+
+        _starship = null;
     }
 
     IEnumerator<GameObject> IEnumerable<GameObject>.GetEnumerator()

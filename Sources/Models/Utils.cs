@@ -72,6 +72,6 @@ public static class Utils
     public static Vector2 NextVector(this Random random, float minLength, float maxLength)
     {
         random.NextUnitVector(out var vector);
-        return vector * random.NextSingle(minLength, maxLength);
+        return random.NextSingle(minLength, maxLength) * vector;
     }
 }

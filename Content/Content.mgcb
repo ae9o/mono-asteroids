@@ -37,6 +37,20 @@
 /processorParam:TextureFormat=Color
 /build:BulletSprite.png
 
+#begin DefaultFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:DefaultFont.spritefont
+
+#begin LargeFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:LargeFont.spritefont
+
 #begin LaserRaySprite.png
 /importer:TextureImporter
 /processor:TextureProcessor

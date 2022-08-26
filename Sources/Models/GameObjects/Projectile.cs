@@ -22,7 +22,7 @@ namespace MonoAsteroids;
 
 public abstract class Projectile : GameObject
 {
-    public float Speed { get; set; } = 1f;
+    public float Speed { get; set; }
 
     public bool RemoveSelfOnCollision { get; set; }
 

@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace MonoAsteroids;
 
 public interface IBreakable
 {
+    event EventHandler Broken;
+
     void Break(GameObject sender);
 }

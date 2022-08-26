@@ -23,10 +23,15 @@ namespace MonoAsteroids;
 
 public class Starship : GameObject
 {
-    private readonly CountdownTimer _bulletCooldownTimer = new CountdownTimer(0);
-    private readonly CountdownTimer _laserCooldownTimer = new CountdownTimer(0);
-    private readonly Stack<Bullet> _bullets = new Stack<Bullet>();
-    private readonly Stack<LaserRay> _laserRays = new Stack<LaserRay>();
+    private readonly CountdownTimer _fireBulletCooldown = new CountdownTimer(0);
+    private readonly CountdownTimer _fireLaserCooldown = new CountdownTimer(0);
+    private readonly List<CountdownTimer> _chargeLaserCooldowns = new List<CountdownTimer>();
+
+    public Func<Bullet> BulletSupplier { get; set; }
+
+    public Func<LaserRay> LaserRaySupplier { get; set; }
+
+    public int LaserCapacity { get; set; } = 5;
 
     public float EngageImpulse { get; set; } = 0.001f;
 
@@ -53,38 +58,38 @@ public class Starship : GameObject
 
     public void FireBullet()
     {
-        if (_bulletCooldownTimer.State == TimerState.Started)
+        if (_fireBulletCooldown.State == TimerState.Started)
         {
             return;
         }
 
-        if (_bullets.Count == 0)
+        if (BulletSupplier == null)
         {
             return;
         }
 
-        FireProjectile(_bullets.Pop());
+        FireProjectile(BulletSupplier());
 
-        _bulletCooldownTimer.Interval = TimeSpan.FromSeconds(BulletCooldown);
-        _bulletCooldownTimer.Restart();
+        _fireBulletCooldown.Interval = TimeSpan.FromSeconds(BulletCooldown);
+        _fireBulletCooldown.Restart();
     }
 
     public void FireLaser()
     {
-        if (_laserCooldownTimer.State == TimerState.Started)
+        if (_fireLaserCooldown.State == TimerState.Started)
         {
             return;
         }
 
-        if (_laserRays.Count == 0)
+        if (LaserRaySupplier == null)
         {
             return;
         }
 
-        FireProjectile(_laserRays.Pop());
+        FireProjectile(LaserRaySupplier());
 
-        _laserCooldownTimer.Interval = TimeSpan.FromSeconds(LaserCooldown);
-        _laserCooldownTimer.Restart();
+        _fireLaserCooldown.Interval = TimeSpan.FromSeconds(LaserCooldown);
+        _fireLaserCooldown.Restart();
     }
 
     private void FireProjectile(Projectile projectile)
@@ -95,27 +100,11 @@ public class Starship : GameObject
         Model.Add(projectile);
     }
 
-    public void Add(Bullet bullet)
-    {
-        bullet.Removed += OnBulletRemoved;
-        _bullets.Push(bullet);
-    }
-
-    public void Add(LaserRay ray)
-    {
-        _laserRays.Push(ray);
-    }
-
-    private void OnBulletRemoved(object sender, EventArgs args)
-    {
-        _bullets.Push((Bullet)sender);
-    }
-
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
 
-        _bulletCooldownTimer.Update(gameTime);
-        _laserCooldownTimer.Update(gameTime);
+        _fireBulletCooldown.Update(gameTime);
+        _fireLaserCooldown.Update(gameTime);
     }
 }

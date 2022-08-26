@@ -30,12 +30,23 @@ public class InputController : GameComponent
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
+
         var keyboard = Keyboard.GetState();
         var mouse = Mouse.GetState();
 
         if (keyboard.IsKeyDown(Keys.Escape))
         {
             Game.Exit();
+        }
+
+        if (_model.State != ModelState.RoundStarted)
+        {
+            if (keyboard.IsKeyDown(Keys.Space))
+            {
+                _model.StartRound();
+            }
+            return;
         }
 
         if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
@@ -62,7 +73,5 @@ public class InputController : GameComponent
         {
             _model.Starship.FireLaser();
         }
-
-        base.Update(gameTime);
     }
 }

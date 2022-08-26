@@ -27,16 +27,12 @@ public static class GameObjectFactory
         starship.Size = new Vector2(0.1f, 0.1f);
         starship.LinearDamping = 5f;
         starship.AngularDamping = 10f;
+        starship.BulletSupplier = NewDefaultBullet;
+        starship.LaserRaySupplier = NewDefaultLaserRay;
 
         var fixture = starship.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat1;
         fixture.IsSensor = true;
-
-        for (int i = 0; i < 20; ++i)
-        {
-            starship.Add(NewDefaultBullet());
-            starship.Add(NewDefaultLaserRay());
-        }
 
         return starship;
     }
