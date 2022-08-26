@@ -33,35 +33,35 @@ public static class Utils
         All
     }
 
-    public static Edge GetRandomEdge()
+    public static Edge NextEdge(this Random random)
     {
-        return (Edge)Random.Next((int)Edge.All);
+        return (Edge)random.Next((int)Edge.All);
     }
 
-    public static Vector2 GetRandomPositionOutsideWorld(float worldWidth, float worldHeight)
+    public static Vector2 NextPositionOutsideWorld(this Random random, float worldWidth, float worldHeight)
     {
         Vector2 pos = new Vector2();
 
-        switch (GetRandomEdge())
+        switch (random.NextEdge())
         {
             case Edge.Left:
                 pos.X = 0;
-                pos.Y = worldHeight * Random.NextSingle();
+                pos.Y = worldHeight * random.NextSingle();
                 break;
 
             case Edge.Top:
-                pos.X = worldWidth * Random.NextSingle();
+                pos.X = worldWidth * random.NextSingle();
                 pos.Y = 0;
                 break;
 
             case Edge.Right:
                 pos.X = worldWidth;
-                pos.Y = worldHeight * Random.NextSingle();
+                pos.Y = worldHeight * random.NextSingle();
                 break;
 
             case Edge.Bottom:
             default:
-                pos.X = worldWidth * Random.NextSingle();
+                pos.X = worldWidth * random.NextSingle();
                 pos.Y = worldHeight;
                 break;
         }
@@ -69,9 +69,9 @@ public static class Utils
         return pos;
     }
 
-    public static Vector2 GetRandomVector(float minLength, float maxLength)
+    public static Vector2 NextVector(this Random random, float minLength, float maxLength)
     {
-        Random.NextUnitVector(out var vector);
-        return vector * Random.NextSingle(minLength, maxLength);
+        random.NextUnitVector(out var vector);
+        return vector * random.NextSingle(minLength, maxLength);
     }
 }

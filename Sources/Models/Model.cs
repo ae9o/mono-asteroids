@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
+using MonoGame.Extended;
 using MonoGame.Extended.Timers;
 using MonoGame.Extended.Collections;
 
@@ -33,8 +34,8 @@ public class Model : GameComponent, IEnumerable<GameObject>
     public static readonly Vector2 WorldUpDirection = -Vector2.UnitY;
 
     private readonly Bag<GameObject> _gameObjects = new Bag<GameObject>();
+    private readonly Bag<GameObject> _addedGameObjects = new Bag<GameObject>();
     private readonly Bag<GameObject> _removedGameObjects = new Bag<GameObject>();
-
     private bool _locked;
 
     private World _world;
@@ -54,7 +55,7 @@ public class Model : GameComponent, IEnumerable<GameObject>
         _world = new World();
         _world.Gravity = Vector2.Zero;
 
-        _asteroidSpawnClock = new ContinuousClock(5.0);
+        _asteroidSpawnClock = new ContinuousClock(10.0);
         _asteroidSpawnClock.Tick += OnAsteroidSpawnClockTick;
 
         StartRound();
@@ -67,7 +68,7 @@ public class Model : GameComponent, IEnumerable<GameObject>
         _starship.OnCollision += OnStarshipCollision;
         Add(_starship);
 
-        _asteroidSpawnClock.Start();
+        _asteroidSpawnClock.Restart();
 
         SpawnLargeAsteroid();
     }
@@ -75,6 +76,12 @@ public class Model : GameComponent, IEnumerable<GameObject>
     public void FinishRound()
     {
         _asteroidSpawnClock.Stop();
+    }
+
+    public void RestartRound()
+    {
+        FinishRound();
+        StartRound();
     }
 
     private bool OnStarshipCollision(Fixture sender, Fixture other, Contact contact)
@@ -90,9 +97,27 @@ public class Model : GameComponent, IEnumerable<GameObject>
 
     private void SpawnLargeAsteroid()
     {
+        var smallShard1 = GameObjectFactory.NewSmallAsteroid();
+        var smallShard2 = GameObjectFactory.NewSmallAsteroid();
+        var smallShard3 = GameObjectFactory.NewSmallAsteroid();
+        var smallShard4 = GameObjectFactory.NewSmallAsteroid();
+
+        var mediumShard1 = GameObjectFactory.NewMediumAsteroid();
+        var mediumShard2 = GameObjectFactory.NewMediumAsteroid();
+
+        mediumShard1.Shards.Add(smallShard1);
+        mediumShard1.Shards.Add(smallShard2);
+
+        mediumShard2.Shards.Add(smallShard3);
+        mediumShard2.Shards.Add(smallShard4);
+
         var asteroid = GameObjectFactory.NewLargeAsteroid();
-        asteroid.Position = Utils.GetRandomPositionOutsideWorld(WorldWidth, WorldHeight);
-        asteroid.LinearVelocity = Utils.GetRandomVector(0.1f, 0.5f);
+        asteroid.Position = Utils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
+        asteroid.LinearVelocity = Utils.Random.NextVector(0.1f, 0.5f);
+        asteroid.AngularVelocity = Utils.Random.NextSingle(-0.5f, 0.5f);
+        asteroid.Shards.Add(mediumShard1);
+        asteroid.Shards.Add(mediumShard2);
+
         Add(asteroid);
     }
 
@@ -104,7 +129,6 @@ public class Model : GameComponent, IEnumerable<GameObject>
         foreach (var obj in _gameObjects)
         {
             obj.Update(gameTime);
-            ClipToWorld(obj);
         }
 
         _world.Step(gameTime.ElapsedGameTime);
@@ -125,42 +149,26 @@ public class Model : GameComponent, IEnumerable<GameObject>
             Remove(obj);
         }
         _removedGameObjects.Clear();
-    }
 
-    private void ClipToWorld(GameObject obj)
-    {
-        Vector2 halfSize = obj.Size * 0.5f;
-        Vector2 pos = obj.Position;
-        Vector2 tmp = pos;
-
-        if (pos.X < -halfSize.X)
+        foreach (var obj in _addedGameObjects)
         {
-            tmp.X = WorldWidth + halfSize.X;
+            Add(obj);
         }
-        else if (pos.X > WorldWidth + halfSize.X)
-        {
-            tmp.X = -halfSize.X;
-        }
-
-        if (pos.Y < -halfSize.Y)
-        {
-            tmp.Y = WorldHeight + halfSize.Y;
-        }
-        else if (pos.Y > WorldHeight + halfSize.Y)
-        {
-            tmp.Y = -halfSize.Y;
-        }
-
-        if (tmp != pos)
-        {
-            obj.OnFlewOutOfWorld();
-            obj.Position = tmp;
-        }
+        _addedGameObjects.Clear();
     }
 
     public void Add(GameObject obj)
     {
-        if (obj.Model == null)
+        if (obj.Model != null)
+        {
+            return;
+        }
+
+        if (_locked)
+        {
+            _addedGameObjects.Add(obj);
+        }
+        else
         {
             _gameObjects.Add(obj);
             _world.Add(obj);

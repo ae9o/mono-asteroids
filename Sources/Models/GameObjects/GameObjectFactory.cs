@@ -27,10 +27,6 @@ public static class GameObjectFactory
         starship.Size = new Vector2(0.1f, 0.1f);
         starship.LinearDamping = 5f;
         starship.AngularDamping = 10f;
-        starship.EngageImpulse = 0.001f;
-        starship.RotationSpeed = 10;
-        starship.BulletCooldown = 0.2f;
-        starship.LaserCooldown = 0.2f;
 
         var fixture = starship.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat1;
@@ -57,6 +53,30 @@ public static class GameObjectFactory
         return asteroid;
     }
 
+    public static Asteroid NewMediumAsteroid()
+    {
+        Asteroid asteroid = new Asteroid();
+        asteroid.Size = new Vector2(0.05f, 0.05f);
+
+        var fixture = asteroid.CreateCircle(0.025f, 1f);
+        fixture.CollisionCategories = Category.Cat2;
+        fixture.CollidesWith = Category.Cat1 | Category.Cat3;
+
+        return asteroid;
+    }
+
+    public static Asteroid NewSmallAsteroid()
+    {
+        Asteroid asteroid = new Asteroid();
+        asteroid.Size = new Vector2(0.025f, 0.025f);
+
+        var fixture = asteroid.CreateCircle(0.0125f, 1f);
+        fixture.CollisionCategories = Category.Cat2;
+        fixture.CollidesWith = Category.Cat1 | Category.Cat3;
+
+        return asteroid;
+    }
+
     public static Bullet NewDefaultBullet()
     {
         Bullet bullet = new Bullet();
@@ -76,7 +96,7 @@ public static class GameObjectFactory
     {
         LaserRay ray = new LaserRay();
         ray.Size = new Vector2(0.01f, 0.05f);
-        ray.Speed = 1f;
+        ray.Speed = 2f;
 
         var fixture = ray.CreateRectangle(0.01f, 0.05f, 1f, Vector2.Zero);
         fixture.CollisionCategories = Category.Cat3;

@@ -22,7 +22,7 @@ namespace MonoAsteroids;
 
 public abstract class Projectile : GameObject
 {
-    public float Speed { get; set; }
+    public float Speed { get; set; } = 1f;
 
     public bool RemoveSelfOnCollision { get; set; }
 
@@ -45,7 +45,10 @@ public abstract class Projectile : GameObject
 
     public bool OnProjectileCollision(Fixture sender, Fixture other, Contact contact)
     {
-        ((GameObject)other.Body).Remove();
+        if (other.Body is IBreakable)
+        {
+            ((IBreakable)other.Body).Break(this);
+        }
 
         if (RemoveSelfOnCollision)
         {

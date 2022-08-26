@@ -28,13 +28,13 @@ public class Starship : GameObject
     private readonly Stack<Bullet> _bullets = new Stack<Bullet>();
     private readonly Stack<LaserRay> _laserRays = new Stack<LaserRay>();
 
-    public float EngageImpulse { get; set; }
+    public float EngageImpulse { get; set; } = 0.001f;
 
-    public float RotationSpeed { get; set; }
+    public float RotationSpeed { get; set; } = 5f;
 
-    public float BulletCooldown { get; set; }
+    public float BulletCooldown { get; set; } = 0.2f;
 
-    public float LaserCooldown { get; set; }
+    public float LaserCooldown { get; set; } = 0.2f;
 
     public void Engage()
     {
@@ -89,10 +89,10 @@ public class Starship : GameObject
 
     private void FireProjectile(Projectile projectile)
     {
-        Model.Add(projectile);
         projectile.Position = Position;
         projectile.Rotation = Rotation;
         projectile.Fire(LookDirection);
+        Model.Add(projectile);
     }
 
     public void Add(Bullet bullet)

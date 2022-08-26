@@ -62,7 +62,46 @@ public abstract class GameObject : Body, IUpdate
 
     public Vector2 LookDirection => GetWorldVector(Model.WorldUpDirection);
 
-    public virtual void Update(GameTime gameTime) {}
+    public virtual void Update(GameTime gameTime)
+    {
+        ClipToWorld();
+    }
+
+    private void ClipToWorld()
+    {
+        Vector2 halfSize = Size * 0.5f;
+        Vector2 pos = Position;
+        Vector2 tmp = pos;
+
+        if (pos.X < -halfSize.X)
+        {
+            tmp.X = Model.WorldWidth + halfSize.X;
+        }
+        else if (pos.X > Model.WorldWidth + halfSize.X)
+        {
+            tmp.X = -halfSize.X;
+        }
+
+        if (pos.Y < -halfSize.Y)
+        {
+            tmp.Y = Model.WorldHeight + halfSize.Y;
+        }
+        else if (pos.Y > Model.WorldHeight + halfSize.Y)
+        {
+            tmp.Y = -halfSize.Y;
+        }
+
+        if (tmp != pos)
+        {
+            OnFlewOutOfWorld();
+            Position = tmp;
+        }
+    }
+
+    public virtual void OnFlewOutOfWorld()
+    {
+        FlewOutOfWorld?.Invoke(this, EventArgs.Empty);
+    }
 
     public void Remove()
     {
@@ -77,10 +116,5 @@ public abstract class GameObject : Body, IUpdate
     public virtual void OnRemoved()
     {
         Removed?.Invoke(this, EventArgs.Empty);
-    }
-
-    public virtual void OnFlewOutOfWorld()
-    {
-        FlewOutOfWorld?.Invoke(this, EventArgs.Empty);
     }
 }
