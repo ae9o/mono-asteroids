@@ -20,18 +20,18 @@ using MonoGame.Extended;
 
 namespace MonoAsteroids;
 
+public enum Edge
+{
+    Left,
+    Top,
+    Right,
+    Bottom,
+    All
+}
+
 public static class Utils
 {
     public static readonly Random Random = new Random();
-
-    public enum Edge
-    {
-        Left,
-        Top,
-        Right,
-        Bottom,
-        All
-    }
 
     public static Edge NextEdge(this Random random)
     {
@@ -69,9 +69,9 @@ public static class Utils
         return pos;
     }
 
-    public static Vector2 NextVector(this Random random, float minLength, float maxLength)
+    public static Vector2 NextVector(this Random random, float min, float max)
     {
         random.NextUnitVector(out var vector);
-        return random.NextSingle(minLength, maxLength) * vector;
+        return random.NextSingle(min, max) * vector;
     }
 }

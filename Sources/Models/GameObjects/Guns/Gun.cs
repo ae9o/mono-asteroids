@@ -25,15 +25,26 @@ public class Gun<T>
 {
     private readonly CountdownTimer _cooldownTimer = new CountdownTimer(0);
     private readonly GameObject _parent;
+    private Func<T> _projectileSupplier;
+    private Pool<T> _projectilePool;
 
     public Gun(GameObject parent)
     {
         _parent = parent;
     }
 
-    public Func<T> ProjectileSupplier { get; set; }
-
     public float Cooldown { get; set; } = 0.2f;
+
+    public Func<T> ProjectileSupplier
+    {
+        get => _projectileSupplier;
+
+        set
+        {
+            _projectileSupplier = value;
+            _projectilePool = new Pool<T>(value);
+        }
+    }
 
     public virtual void Fire()
     {
@@ -42,12 +53,12 @@ public class Gun<T>
             return;
         }
 
-        if (ProjectileSupplier == null)
+        if (_projectilePool == null)
         {
             return;
         }
 
-        DoFire(ProjectileSupplier());
+        DoFire(_projectilePool.Obtain());
 
         _cooldownTimer.Interval = TimeSpan.FromSeconds(Cooldown);
         _cooldownTimer.Restart();

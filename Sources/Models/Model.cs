@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
-using MonoGame.Extended;
 using MonoGame.Extended.Timers;
 using MonoGame.Extended.Collections;
 
@@ -46,6 +45,10 @@ public class Model : GameComponent, IEnumerable<GameObject>
     private readonly Bag<GameObject> _addedGameObjects = new Bag<GameObject>();
     private readonly Bag<GameObject> _removedGameObjects = new Bag<GameObject>();
     private bool _locked;
+
+    private readonly Pool<Asteroid> _largeAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewLargeAsteroid);
+    private readonly Pool<Asteroid> _mediumAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewMediumAsteroid);
+    private readonly Pool<Asteroid> _smallAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewSmallAsteroid);
 
     private ModelState _state = ModelState.Fresh;
     private World _world;
@@ -74,6 +77,9 @@ public class Model : GameComponent, IEnumerable<GameObject>
         _asteroidSpawnClock = new ContinuousClock(AsteroidSpawnInterval);
         _asteroidSpawnClock.Tick += OnAsteroidSpawnClockTick;
         _asteroidSpawnClock.Stop();
+
+        _starship = GameObjectFactory.NewDemoStarship();
+        Add(_starship);
 
         SpawnInitialAsteroids();
     }
@@ -120,26 +126,29 @@ public class Model : GameComponent, IEnumerable<GameObject>
 
     private void SpawnLargeAsteroid()
     {
-        var asteroid = GameObjectFactory.NewLargeAsteroid();
-        asteroid.Position = Utils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
-        asteroid.LinearVelocity = Utils.Random.NextVector(0.1f, 0.2f);
-        asteroid.AngularVelocity = Utils.Random.NextSingle(-0.7f, 0.7f);
-        asteroid.ShardSupplier = MediumAsteroidSupplier;
-        asteroid.Broken += OnAsteroidBroken;
-        Add(asteroid);
+        Add(ObtainLargeAsteroid());
     }
 
-    private Asteroid MediumAsteroidSupplier()
+    private Asteroid ObtainLargeAsteroid()
     {
-        var asteroid = GameObjectFactory.NewMediumAsteroid();
-        asteroid.ShardSupplier = SmallAsteroidSupplier;
+        var asteroid = _largeAsteroidPool.Obtain();
+        asteroid.Position = Utils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
+        asteroid.ShardSupplier = ObtainMediumAsteroid;
         asteroid.Broken += OnAsteroidBroken;
         return asteroid;
     }
 
-    private Asteroid SmallAsteroidSupplier()
+    private Asteroid ObtainMediumAsteroid()
     {
-        var asteroid = GameObjectFactory.NewSmallAsteroid();
+        var asteroid = _mediumAsteroidPool.Obtain();
+        asteroid.ShardSupplier = ObtainSmallAsteroid;
+        asteroid.Broken += OnAsteroidBroken;
+        return asteroid;
+    }
+
+    private Asteroid ObtainSmallAsteroid()
+    {
+        var asteroid = _smallAsteroidPool.Obtain();
         asteroid.Broken += OnAsteroidBroken;
         return asteroid;
     }

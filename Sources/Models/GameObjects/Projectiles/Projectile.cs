@@ -20,8 +20,10 @@ using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace MonoAsteroids;
 
-public abstract class Projectile : GameObject
+public abstract class Projectile : GameObject, IPoolable
 {
+    private PoolFreeDelegate _freeDelegate;
+
     public float Speed { get; set; }
 
     public bool RemoveSelfOnCollision { get; set; }
@@ -58,5 +60,22 @@ public abstract class Projectile : GameObject
         }
 
         return true;
+    }
+
+    public void SetPool(PoolFreeDelegate freeDelegate)
+    {
+        _freeDelegate = freeDelegate;
+    }
+
+    public void Reset()
+    {
+        _freeDelegate = null;
+    }
+
+    protected override void OnRemoved()
+    {
+        base.OnRemoved();
+
+        _freeDelegate?.Invoke(this);
     }
 }

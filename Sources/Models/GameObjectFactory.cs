@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using MonoGame.Extended;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
 
@@ -37,10 +38,22 @@ public static class GameObjectFactory
         return starship;
     }
 
+    public static Starship NewDemoStarship()
+    {
+        Starship starship = new Starship();
+        starship.Size = new Vector2(0.1f, 0.1f);
+        starship.Position = Utils.Random.NextPositionOutsideWorld(Model.WorldWidth, Model.WorldHeight);
+        starship.LinearVelocity = new Vector2(0.2f, -0.2f);
+        starship.Rotation = 0.75f;
+        return starship;
+    }
+
     public static Asteroid NewLargeAsteroid()
     {
         Asteroid asteroid = new Asteroid();
         asteroid.Size = new Vector2(0.1f, 0.1f);
+        asteroid.LinearVelocity = Utils.Random.NextVector(0.1f, 0.2f);
+        asteroid.AngularVelocity = Utils.Random.NextSingle(-0.7f, 0.7f);
 
         var fixture = asteroid.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat2;

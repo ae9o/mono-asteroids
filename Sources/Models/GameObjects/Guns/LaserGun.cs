@@ -61,7 +61,6 @@ public class LaserGun : Gun<LaserRay>
         base.DoFire(ray);
 
         --_currentCharge;
-        _chargingClock.Restart();
     }
 
     private void OnChargingTick(object sender, EventArgs args)

@@ -20,8 +20,10 @@ using tainicom.Aether.Physics2D.Common;
 
 namespace MonoAsteroids;
 
-public class Asteroid : GameObject, IBreakable
+public class Asteroid : GameObject, IBreakable, IPoolable
 {
+    private PoolFreeDelegate _freeDelegate;
+
     public event EventHandler Broken;
 
     public Func<Asteroid> ShardSupplier { get; set; }
@@ -62,12 +64,30 @@ public class Asteroid : GameObject, IBreakable
     public virtual void Break(GameObject sender)
     {
         ScatterShards();
-        Remove();
         OnBroken();
+        Remove();
     }
 
     protected virtual void OnBroken()
     {
         Broken?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void SetPool(PoolFreeDelegate freeDelegate)
+    {
+        _freeDelegate = freeDelegate;
+    }
+
+    public void Reset()
+    {
+        _freeDelegate = null;
+        Broken = null;
+    }
+
+    protected override void OnRemoved()
+    {
+        base.OnRemoved();
+
+        _freeDelegate?.Invoke(this);
     }
 }

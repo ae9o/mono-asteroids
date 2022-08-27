@@ -118,7 +118,7 @@ public partial class View : DrawableGameComponent
         _spriteBatch.Begin();
 
         DrawScore(String.Format("Score: {0}", _model.Score));
-        DrawLaserCharge(String.Format("Laser: {0}", _model.Starship?.LaserGun.CurrentCharge));
+        DrawLaserCharge(String.Format("Laser: {0}", _model.Starship.LaserGun.CurrentCharge));
 
         switch (_model.State)
         {
