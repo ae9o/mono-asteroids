@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.Timers;
 
 namespace MonoAsteroids;
 
 public class Starship : GameObject
 {
-    private readonly CountdownTimer _fireBulletCooldown = new CountdownTimer(0);
-    private readonly CountdownTimer _fireLaserCooldown = new CountdownTimer(0);
-    private readonly List<CountdownTimer> _chargeLaserCooldowns = new List<CountdownTimer>();
+    private readonly LaserGun _laserGun;
+    private readonly MachineGun _machineGun;
 
-    public Func<Bullet> BulletSupplier { get; set; }
+    public Starship()
+    {
+        _laserGun  = new LaserGun(this);
+        _machineGun = new MachineGun(this);
+    }
 
-    public Func<LaserRay> LaserRaySupplier { get; set; }
+    public LaserGun LaserGun => _laserGun;
 
-    public int LaserCapacity { get; set; } = 5;
+    public MachineGun MachineGun => _machineGun;
 
     public float EngageImpulse { get; set; } = 0.001f;
 
     public float RotationSpeed { get; set; } = 5f;
-
-    public float BulletCooldown { get; set; } = 0.2f;
-
-    public float LaserCooldown { get; set; } = 0.2f;
 
     public void Engage()
     {
@@ -56,55 +52,11 @@ public class Starship : GameObject
         Rotation += RotationSpeed * delta;
     }
 
-    public void FireBullet()
-    {
-        if (_fireBulletCooldown.State == TimerState.Started)
-        {
-            return;
-        }
-
-        if (BulletSupplier == null)
-        {
-            return;
-        }
-
-        FireProjectile(BulletSupplier());
-
-        _fireBulletCooldown.Interval = TimeSpan.FromSeconds(BulletCooldown);
-        _fireBulletCooldown.Restart();
-    }
-
-    public void FireLaser()
-    {
-        if (_fireLaserCooldown.State == TimerState.Started)
-        {
-            return;
-        }
-
-        if (LaserRaySupplier == null)
-        {
-            return;
-        }
-
-        FireProjectile(LaserRaySupplier());
-
-        _fireLaserCooldown.Interval = TimeSpan.FromSeconds(LaserCooldown);
-        _fireLaserCooldown.Restart();
-    }
-
-    private void FireProjectile(Projectile projectile)
-    {
-        projectile.Position = Position;
-        projectile.Rotation = Rotation;
-        projectile.Fire(LookDirection);
-        Model.Add(projectile);
-    }
-
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
 
-        _fireBulletCooldown.Update(gameTime);
-        _fireLaserCooldown.Update(gameTime);
+        _laserGun.Update(gameTime);
+        _machineGun.Update(gameTime);
     }
 }

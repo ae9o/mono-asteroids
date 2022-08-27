@@ -28,15 +28,15 @@ public class Asteroid : GameObject, IBreakable
 
     public int MinShardCount { get; set; } = 2;
 
-    public int MaxShardCount { get; set; } = 3;
+    public int MaxShardCount { get; set; } = 4;
 
     public float MinShardAngularVelocity { get; set; } = -0.5f;
 
     public float MaxShardAngularVelocity { get; set; } = 0.5f;
 
-    public float MinShardAngularOffset { get; set; } = -0.9f;
+    public float MinShardAngularOffset { get; set; } = -1.5f;
 
-    public float MaxShardAngularOffset { get; set; } = 0.9f;
+    public float MaxShardAngularOffset { get; set; } = 1.5f;
 
     public float ShardAcceleration { get; set; } = 1.25f;
 

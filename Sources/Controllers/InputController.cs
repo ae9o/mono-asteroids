@@ -23,7 +23,8 @@ public class InputController : GameComponent
 {
     private readonly Model _model;
 
-    public InputController(Game game, Model model) : base(game)
+    public InputController(Game game, Model model)
+        : base(game)
     {
         _model = model;
     }
@@ -66,12 +67,12 @@ public class InputController : GameComponent
 
         if (mouse.LeftButton == ButtonState.Pressed)
         {
-            _model.Starship.FireBullet();
+            _model.Starship.MachineGun.Fire();
         }
 
         if (mouse.RightButton == ButtonState.Pressed)
         {
-            _model.Starship.FireLaser();
+            _model.Starship.LaserGun.Fire();
         }
     }
 }

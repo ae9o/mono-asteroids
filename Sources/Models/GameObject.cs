@@ -23,11 +23,11 @@ namespace MonoAsteroids;
 
 public abstract class GameObject : Body, IUpdate
 {
+    private Model _model;
+
     public event EventHandler Added;
     public event EventHandler Removed;
     public event EventHandler FlewOutOfWorld;
-
-    private Model _model;
 
     public GameObject()
     {
@@ -57,6 +57,8 @@ public abstract class GameObject : Body, IUpdate
             }
         }
     }
+
+    public GameObject Parent { get; set; }
 
     public Vector2 Size { get; set; }
 
@@ -98,7 +100,7 @@ public abstract class GameObject : Body, IUpdate
         }
     }
 
-    public virtual void OnFlewOutOfWorld()
+    protected virtual void OnFlewOutOfWorld()
     {
         FlewOutOfWorld?.Invoke(this, EventArgs.Empty);
     }
@@ -108,12 +110,12 @@ public abstract class GameObject : Body, IUpdate
         Model?.Remove(this);
     }
 
-    public virtual void OnAdded()
+    protected virtual void OnAdded()
     {
         Added?.Invoke(this, EventArgs.Empty);
     }
 
-    public virtual void OnRemoved()
+    protected virtual void OnRemoved()
     {
         Removed?.Invoke(this, EventArgs.Empty);
     }

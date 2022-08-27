@@ -16,6 +16,4 @@
 
 namespace MonoAsteroids;
 
-public class LaserRay : Projectile
-{
-}
+public class LaserRay : Projectile {}

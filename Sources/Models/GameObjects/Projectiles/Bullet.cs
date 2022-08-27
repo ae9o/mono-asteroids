@@ -16,6 +16,4 @@
 
 namespace MonoAsteroids;
 
-public class Bullet : Projectile
-{
-}
+public class Bullet : Projectile {}

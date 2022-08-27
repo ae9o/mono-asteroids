@@ -31,19 +31,21 @@ public abstract class Projectile : GameObject
         LinearVelocity = direction * Speed;
     }
 
-    public override void OnFlewOutOfWorld()
+    protected override void OnFlewOutOfWorld()
     {
         base.OnFlewOutOfWorld();
+
         Remove();
     }
 
-    public override void OnAdded()
+    protected override void OnAdded()
     {
         base.OnAdded();
+
         OnCollision += OnProjectileCollision;
     }
 
-    public bool OnProjectileCollision(Fixture sender, Fixture other, Contact contact)
+    protected bool OnProjectileCollision(Fixture sender, Fixture other, Contact contact)
     {
         if (other.Body is IBreakable)
         {

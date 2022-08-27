@@ -53,7 +53,8 @@ public class Model : GameComponent, IEnumerable<GameObject>
     private ContinuousClock _asteroidSpawnClock;
     private int _score;
 
-    public Model(Game game) : base(game)
+    public Model(Game game)
+        : base(game)
     {
     }
 
@@ -117,22 +118,11 @@ public class Model : GameComponent, IEnumerable<GameObject>
         StartRound();
     }
 
-    private bool OnStarshipCollision(Fixture sender, Fixture other, Contact contact)
-    {
-        FinishRound();
-        return true;
-    }
-
-    private void OnAsteroidSpawnClockTick(object sender, EventArgs e)
-    {
-        SpawnLargeAsteroid();
-    }
-
     private void SpawnLargeAsteroid()
     {
         var asteroid = GameObjectFactory.NewLargeAsteroid();
         asteroid.Position = Utils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
-        asteroid.LinearVelocity = Utils.Random.NextVector(0.1f, 0.3f);
+        asteroid.LinearVelocity = Utils.Random.NextVector(0.1f, 0.2f);
         asteroid.AngularVelocity = Utils.Random.NextSingle(-0.7f, 0.7f);
         asteroid.ShardSupplier = MediumAsteroidSupplier;
         asteroid.Broken += OnAsteroidBroken;
@@ -152,11 +142,6 @@ public class Model : GameComponent, IEnumerable<GameObject>
         var asteroid = GameObjectFactory.NewSmallAsteroid();
         asteroid.Broken += OnAsteroidBroken;
         return asteroid;
-    }
-
-    private void OnAsteroidBroken(object sender, EventArgs args)
-    {
-        ++_score;
     }
 
     private void SpawnInitialAsteroids()
@@ -251,6 +236,22 @@ public class Model : GameComponent, IEnumerable<GameObject>
         _world.Clear();
 
         _starship = null;
+    }
+
+    private bool OnStarshipCollision(Fixture sender, Fixture other, Contact contact)
+    {
+        FinishRound();
+        return true;
+    }
+
+    private void OnAsteroidSpawnClockTick(object sender, EventArgs e)
+    {
+        SpawnLargeAsteroid();
+    }
+
+    private void OnAsteroidBroken(object sender, EventArgs args)
+    {
+        ++_score;
     }
 
     IEnumerator<GameObject> IEnumerable<GameObject>.GetEnumerator()

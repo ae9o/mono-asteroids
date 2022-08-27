@@ -16,4 +16,10 @@
 
 namespace MonoAsteroids;
 
-public class Ufo : GameObject {}
+public class MachineGun : Gun<Bullet>
+{
+    public MachineGun(GameObject parent)
+        : base(parent)
+    {
+    }
+}

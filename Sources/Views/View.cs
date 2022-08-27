@@ -32,10 +32,11 @@ public partial class View : DrawableGameComponent
     private Vector2 _viewportSize;
 
     private readonly Vector2 _scorePosition = new Vector2(5f, 5f);
-    private readonly Vector2 _laserRayCountPosition = new Vector2(5f, 25f);
+    private readonly Vector2 _laserChargePosition = new Vector2(5f, 25f);
     private readonly Vector2 _title2Offset = new Vector2(0f, 100f);
 
-    public View(Game game, Model Model) : base(game)
+    public View(Game game, Model Model)
+        : base(game)
     {
         _model = Model;
     }
@@ -117,6 +118,7 @@ public partial class View : DrawableGameComponent
         _spriteBatch.Begin();
 
         DrawScore(String.Format("Score: {0}", _model.Score));
+        DrawLaserCharge(String.Format("Laser: {0}", _model.Starship?.LaserGun.CurrentCharge));
 
         switch (_model.State)
         {
@@ -142,9 +144,9 @@ public partial class View : DrawableGameComponent
         _spriteBatch.DrawString(_defaultFont, s, _scorePosition, Color.Black);
     }
 
-    private void DrawLaserRayCount(string s)
+    private void DrawLaserCharge(string s)
     {
-        _spriteBatch.DrawString(_defaultFont, s, _laserRayCountPosition, Color.Black);
+        _spriteBatch.DrawString(_defaultFont, s, _laserChargePosition, Color.Black);
     }
 
     private void DrawTitle1(string s)
