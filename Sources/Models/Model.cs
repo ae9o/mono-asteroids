@@ -132,7 +132,7 @@ public class Model : GameComponent, IEnumerable<GameObject>
     private Asteroid ObtainLargeAsteroid()
     {
         var asteroid = _largeAsteroidPool.Obtain();
-        asteroid.Position = Utils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
+        asteroid.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
         asteroid.ShardSupplier = ObtainMediumAsteroid;
         asteroid.Broken += OnAsteroidBroken;
         return asteroid;

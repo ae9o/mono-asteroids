@@ -20,16 +20,7 @@ using MonoGame.Extended;
 
 namespace MonoAsteroids;
 
-public enum Edge
-{
-    Left,
-    Top,
-    Right,
-    Bottom,
-    All
-}
-
-public static class Utils
+public static class RandomUtils
 {
     public static readonly Random Random = new Random();
 
