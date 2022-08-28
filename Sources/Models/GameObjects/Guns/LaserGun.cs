@@ -22,15 +22,18 @@ namespace MonoAsteroids;
 
 public class LaserGun : Gun<LaserRay>
 {
-    private readonly ContinuousClock _chargingClock;
+    private readonly CountdownTimer _chargingTimer;
     private int _maxCharge = 3;
     private int _currentCharge;
 
     public LaserGun(GameObject parent)
         : base(parent)
     {
-        _chargingClock = new ContinuousClock(ChargingInterval);
-        _chargingClock.Tick += OnChargingTick;
+        _currentCharge = _maxCharge;
+
+        _chargingTimer = new CountdownTimer(ChargingInterval);
+        _chargingTimer.Completed += OnChargingCompleted;
+        _chargingTimer.Stop();
     }
 
     public int MaxCharge
@@ -41,6 +44,7 @@ public class LaserGun : Gun<LaserRay>
         {
             _currentCharge += value - _maxCharge;
             _maxCharge = value;
+            StartCharging();
         }
     }
 
@@ -61,13 +65,22 @@ public class LaserGun : Gun<LaserRay>
         base.DoFire(ray);
 
         --_currentCharge;
+        StartCharging();
     }
 
-    private void OnChargingTick(object sender, EventArgs args)
+    private void StartCharging()
     {
-        if (_currentCharge < _maxCharge)
+        if ((_currentCharge < _maxCharge) && (_chargingTimer.State != TimerState.Started))
         {
-            ++_currentCharge;
+            _chargingTimer.Restart();
+        }
+    }
+
+    private void OnChargingCompleted(object sender, EventArgs args)
+    {
+        if (++_currentCharge < _maxCharge)
+        {
+            _chargingTimer.Restart();
         }
     }
 
@@ -75,6 +88,6 @@ public class LaserGun : Gun<LaserRay>
     {
         base.Update(gameTime);
 
-        _chargingClock.Update(gameTime);
+        _chargingTimer.Update(gameTime);
     }
 }
