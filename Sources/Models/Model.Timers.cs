@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Timers;
@@ -33,20 +34,37 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         _asteroidSpawnClock = new ContinuousClock(AsteroidSpawnInterval);
         _asteroidSpawnClock.Tick += OnAsteroidSpawnClockTick;
         _asteroidSpawnClock.Stop();
+
+        _ufoSpawnClock = new ContinuousClock(UfoSpawnInterval);
+        _ufoSpawnClock.Tick += OnUfoSpawnClockTick;
+        _ufoSpawnClock.Stop();
     }
 
     private void UpdateTimers(GameTime gameTime)
     {
         _asteroidSpawnClock.Update(gameTime);
+        _ufoSpawnClock.Update(gameTime);
     }
 
     private void StopTimers()
     {
         _asteroidSpawnClock.Stop();
+        _ufoSpawnClock.Stop();
     }
 
     private void RestartTimers()
     {
         _asteroidSpawnClock.Restart();
+        _ufoSpawnClock.Restart();
+    }
+
+    private void OnAsteroidSpawnClockTick(object sender, EventArgs e)
+    {
+        SpawnLargeAsteroid();
+    }
+
+    private void OnUfoSpawnClockTick(object sender, EventArgs e)
+    {
+        SpawnUfo();
     }
 }

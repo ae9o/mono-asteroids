@@ -118,9 +118,11 @@ public static class GameObjectFactory
     public static Ufo NewDefaultUfo()
     {
         var ufo = new Ufo();
-        ufo.Size = new Vector2(0.05f, 0.05f);
+        ufo.Size = new Vector2(0.1f, 0.1f);
+        ufo.EngageImpulse = 0.0001f;
+        ufo.LinearDamping = 10f;
 
-        var fixture = ufo.CreateCircle(0.025f, 1f);
+        var fixture = ufo.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat2;
         fixture.CollidesWith = Category.Cat1 | Category.Cat3;
 

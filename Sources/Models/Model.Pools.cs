@@ -21,6 +21,8 @@ namespace MonoAsteroids;
 
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
+    public const int InitialAsteroidCount = 3;
+
     private readonly Pool<Asteroid> _largeAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewLargeAsteroid);
     private readonly Pool<Asteroid> _mediumAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewMediumAsteroid);
     private readonly Pool<Asteroid> _smallAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewSmallAsteroid);
@@ -48,5 +50,30 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         var asteroid = _smallAsteroidPool.Obtain();
         asteroid.Broken += OnAsteroidBroken;
         return asteroid;
+    }
+
+    private Ufo ObtainUfo()
+    {
+        var ufo = _ufoPool.Obtain();
+        ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
+        return ufo;
+    }
+
+    private void SpawnInitialAsteroids()
+    {
+        for (int i = 0; i < InitialAsteroidCount; ++i)
+        {
+            SpawnLargeAsteroid();
+        }
+    }
+
+    private void SpawnLargeAsteroid()
+    {
+        Add(ObtainLargeAsteroid());
+    }
+
+    private void SpawnUfo()
+    {
+        Add(ObtainUfo());
     }
 }

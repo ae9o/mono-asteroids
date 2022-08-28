@@ -24,9 +24,7 @@ namespace MonoAsteroids;
 
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
-    public const int InitialAsteroidCount = 3;
-
-    private ModelState _state = ModelState.Fresh;
+    private ModelState _state;
     private Starship _starship;
     private int _score;
 
@@ -102,28 +100,10 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         StopTimers();
     }
 
-    private void SpawnInitialAsteroids()
-    {
-        for (int i = 0; i < InitialAsteroidCount; ++i)
-        {
-            SpawnLargeAsteroid();
-        }
-    }
-
-    private void SpawnLargeAsteroid()
-    {
-        Add(ObtainLargeAsteroid());
-    }
-
     private bool OnStarshipCollision(Fixture sender, Fixture other, Contact contact)
     {
         FinishRound();
         return true;
-    }
-
-    private void OnAsteroidSpawnClockTick(object sender, EventArgs e)
-    {
-        SpawnLargeAsteroid();
     }
 
     private void OnAsteroidBroken(object sender, EventArgs args)

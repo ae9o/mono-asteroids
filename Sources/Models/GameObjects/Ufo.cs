@@ -14,11 +14,53 @@
  * limitations under the License.
  */
 
+using System;
+using Microsoft.Xna.Framework;
+
 namespace MonoAsteroids;
 
-public class Ufo : PoolableGameObject
+public class Ufo : PoolableGameObject, IBreakable
 {
+    public event EventHandler Broken;
+
+    public float EngageImpulse { get; set; }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        PursueStarship();
+    }
+
+    public void PursueStarship()
+    {
+        Vector2 direction = Model.Starship.Position - Position;
+        direction.Normalize();
+
+        ApplyLinearImpulse(direction * EngageImpulse);
+    }
+
+
+    public virtual void Break(GameObject sender)
+    {
+        OnBroken();
+        Remove();
+    }
+
+    protected virtual void OnBroken()
+    {
+        Broken?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected override void OnRemoved()
+    {
+        base.OnRemoved();
+
+        ReturnToPool();
+    }
+
     public override void Reset()
     {
+        Broken = null;
     }
 }
