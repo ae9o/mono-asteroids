@@ -18,29 +18,30 @@ using System;
 
 namespace MonoAsteroids;
 
-public delegate void PoolFreeDelegate(IPoolable item);
+public delegate void ReturnToPoolDelegate(IPoolable item);
 
 public class Pool<T>
     where T : class, IPoolable
 {
     private readonly MonoGame.Extended.Collections.Pool<T> _pool;
-    private readonly PoolFreeDelegate _freeDelegate;
+    private readonly ReturnToPoolDelegate _returnToPoolDelegate;
 
     public Pool(Func<T> createItem, int capacity = 16, int maximum = int.MaxValue)
     {
         _pool = new MonoGame.Extended.Collections.Pool<T>(createItem, capacity, maximum);
-        _freeDelegate = Free;
+        _returnToPoolDelegate = Return;
     }
 
     public T Obtain()
     {
         var item = _pool.Obtain();
-        item.SetPool(_freeDelegate);
+        item.SetReturnToPoolDelegate(_returnToPoolDelegate);
         return item;
     }
 
-    public void Free(IPoolable item)
+    public void Return(IPoolable item)
     {
+        item.SetReturnToPoolDelegate(null);
         item.Reset();
         _pool.Free((T)item);
     }

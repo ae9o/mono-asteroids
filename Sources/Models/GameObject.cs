@@ -16,12 +16,11 @@
 
 using System;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using tainicom.Aether.Physics2D.Dynamics;
 
 namespace MonoAsteroids;
 
-public abstract class GameObject : Body, IUpdate
+public abstract class GameObject : Body
 {
     private Model _model;
 

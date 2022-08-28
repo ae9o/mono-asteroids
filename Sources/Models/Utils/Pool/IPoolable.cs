@@ -18,6 +18,7 @@ namespace MonoAsteroids;
 
 public interface IPoolable
 {
-    void SetPool(PoolFreeDelegate poolFreeDelegate);
+    void SetReturnToPoolDelegate(ReturnToPoolDelegate returnToPoolDelegate);
+    void ReturnToPool();
     void Reset();
 }

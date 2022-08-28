@@ -20,10 +20,8 @@ using tainicom.Aether.Physics2D.Common;
 
 namespace MonoAsteroids;
 
-public class Asteroid : GameObject, IBreakable, IPoolable
+public class Asteroid : PoolableGameObject, IBreakable
 {
-    private PoolFreeDelegate _freeDelegate;
-
     public event EventHandler Broken;
 
     public Func<Asteroid> ShardSupplier { get; set; }
@@ -49,13 +47,13 @@ public class Asteroid : GameObject, IBreakable, IPoolable
             return;
         }
 
-        for (int i = 0, n = Utils.Random.Next(MinShardCount, MaxShardCount + 1); i < n; ++i)
+        for (int i = 0, n = RandomUtils.Random.Next(MinShardCount, MaxShardCount + 1); i < n; ++i)
         {
-            var angularOffset = Complex.FromAngle(Utils.Random.NextSingle(MinShardAngularOffset, MaxShardAngularOffset));
+            var angularOffset = Complex.FromAngle(RandomUtils.Random.NextSingle(MinShardAngularOffset, MaxShardAngularOffset));
 
             var shard = ShardSupplier();
             shard.LinearVelocity = Complex.Multiply(LinearVelocity, ref angularOffset) * ShardAcceleration;
-            shard.AngularVelocity = Utils.Random.NextSingle(MinShardAngularVelocity, MaxShardAngularVelocity);
+            shard.AngularVelocity = RandomUtils.Random.NextSingle(MinShardAngularVelocity, MaxShardAngularVelocity);
             shard.Position = Position;
             Model.Add(shard);
         }
@@ -73,21 +71,15 @@ public class Asteroid : GameObject, IBreakable, IPoolable
         Broken?.Invoke(this, EventArgs.Empty);
     }
 
-    public void SetPool(PoolFreeDelegate freeDelegate)
-    {
-        _freeDelegate = freeDelegate;
-    }
-
-    public void Reset()
-    {
-        _freeDelegate = null;
-        Broken = null;
-    }
-
     protected override void OnRemoved()
     {
         base.OnRemoved();
 
-        _freeDelegate?.Invoke(this);
+        ReturnToPool();
+    }
+
+    public override void Reset()
+    {
+        Broken = null;
     }
 }
