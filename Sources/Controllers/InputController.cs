@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -21,12 +23,35 @@ namespace MonoAsteroids;
 
 public class InputController : GameComponent
 {
+    public const Keys ButtonToStartRound = Keys.Space;
+
     private readonly Model _model;
+
+    private readonly Dictionary<Keys, Action<GameTime>> _keyboardHandlers = new Dictionary<Keys, Action<GameTime>>();
+    private Action<GameTime> _leftButtonMouseHandler;
+    private Action<GameTime> _rightButtonMouseHandler;
 
     public InputController(Game game, Model model)
         : base(game)
     {
         _model = model;
+    }
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        _leftButtonMouseHandler = FireBullet;
+        _rightButtonMouseHandler = FireLaser;
+
+        _keyboardHandlers.Add(Keys.W, EngageStarship);
+        _keyboardHandlers.Add(Keys.Up, EngageStarship);
+
+        _keyboardHandlers.Add(Keys.A, RotateStarshipLeft);
+        _keyboardHandlers.Add(Keys.Left, RotateStarshipLeft);
+
+        _keyboardHandlers.Add(Keys.D, RotateStarshipRight);
+        _keyboardHandlers.Add(Keys.Right, RotateStarshipRight);
     }
 
     public override void Update(GameTime gameTime)
@@ -36,43 +61,65 @@ public class InputController : GameComponent
         var keyboard = Keyboard.GetState();
         var mouse = Mouse.GetState();
 
-        if (keyboard.IsKeyDown(Keys.Escape))
-        {
-            Game.Exit();
-        }
-
         if (_model.State != ModelState.RoundStarted)
         {
-            if (keyboard.IsKeyDown(Keys.Space))
+            if (keyboard.IsKeyDown(ButtonToStartRound))
             {
                 _model.StartRound();
             }
             return;
         }
 
-        if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
-        {
-            _model.Starship.Engage();
-        }
+        ProcessKeyboard(keyboard, gameTime);
+        ProcessMouse(mouse, gameTime);
+    }
 
-        if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
+    private void ProcessKeyboard(KeyboardState keyboard, GameTime gameTime)
+    {
+        foreach (var key in keyboard.GetPressedKeys())
         {
-            _model.Starship.RotateLeft((float)gameTime.ElapsedGameTime.TotalSeconds);
+            if (_keyboardHandlers.TryGetValue(key, out var handler))
+            {
+                handler(gameTime);
+            }
         }
+    }
 
-        if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
-        {
-            _model.Starship.RotateRight((float)gameTime.ElapsedGameTime.TotalSeconds);
-        }
-
+    private void ProcessMouse(MouseState mouse, GameTime gameTime)
+    {
         if (mouse.LeftButton == ButtonState.Pressed)
         {
-            _model.Starship.MachineGun.Fire();
+            _leftButtonMouseHandler?.Invoke(gameTime);
         }
 
         if (mouse.RightButton == ButtonState.Pressed)
         {
-            _model.Starship.LaserGun.Fire();
+            _rightButtonMouseHandler?.Invoke(gameTime);
         }
+    }
+
+    public void EngageStarship(GameTime gameTime)
+    {
+        _model.Starship.Engage();
+    }
+
+    public void RotateStarshipLeft(GameTime gameTime)
+    {
+        _model.Starship.RotateLeft((float)gameTime.ElapsedGameTime.TotalSeconds);
+    }
+
+    public void RotateStarshipRight(GameTime gameTime)
+    {
+        _model.Starship.RotateRight((float)gameTime.ElapsedGameTime.TotalSeconds);
+    }
+
+    public void FireBullet(GameTime gameTime)
+    {
+        _model.Starship.MachineGun.Fire();
+    }
+
+    public void FireLaser(GameTime gameTime)
+    {
+        _model.Starship.LaserGun.Fire();
     }
 }
