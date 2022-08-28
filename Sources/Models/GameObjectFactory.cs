@@ -114,4 +114,16 @@ public static class GameObjectFactory
 
         return ray;
     }
+
+    public static Ufo NewDefaultUfo()
+    {
+        var ufo = new Ufo();
+        ufo.Size = new Vector2(0.05f, 0.05f);
+
+        var fixture = ufo.CreateCircle(0.025f, 1f);
+        fixture.CollisionCategories = Category.Cat2;
+        fixture.CollidesWith = Category.Cat1 | Category.Cat3;
+
+        return ufo;
+    }
 }

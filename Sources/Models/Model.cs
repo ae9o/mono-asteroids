@@ -19,41 +19,15 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
-using MonoGame.Extended.Timers;
-using MonoGame.Extended.Collections;
 
 namespace MonoAsteroids;
 
-public enum ModelState
+public partial class Model : GameComponent, IEnumerable<GameObject>
 {
-    Fresh,
-    RoundStarted,
-    RoundFinished
-}
-
-public class Model : GameComponent, IEnumerable<GameObject>
-{
-    public const float WorldWidth = 1.66f;
-    public const float WorldHeight = 1f;
     public const int InitialAsteroidCount = 3;
-    public const float AsteroidSpawnInterval = 10f;
-
-    public static readonly Vector2 WorldCenter = new Vector2(WorldWidth * 0.5f, WorldHeight * 0.5f);
-    public static readonly Vector2 WorldUpDirection = -Vector2.UnitY;
-
-    private readonly Bag<GameObject> _gameObjects = new Bag<GameObject>();
-    private readonly Bag<GameObject> _addedGameObjects = new Bag<GameObject>();
-    private readonly Bag<GameObject> _removedGameObjects = new Bag<GameObject>();
-    private bool _locked;
-
-    private readonly Pool<Asteroid> _largeAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewLargeAsteroid);
-    private readonly Pool<Asteroid> _mediumAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewMediumAsteroid);
-    private readonly Pool<Asteroid> _smallAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewSmallAsteroid);
 
     private ModelState _state = ModelState.Fresh;
-    private World _world;
     private Starship _starship;
-    private ContinuousClock _asteroidSpawnClock;
     private int _score;
 
     public Model(Game game)
@@ -74,14 +48,25 @@ public class Model : GameComponent, IEnumerable<GameObject>
         _world = new World();
         _world.Gravity = Vector2.Zero;
 
-        _asteroidSpawnClock = new ContinuousClock(AsteroidSpawnInterval);
-        _asteroidSpawnClock.Tick += OnAsteroidSpawnClockTick;
-        _asteroidSpawnClock.Stop();
-
         _starship = GameObjectFactory.NewDemoStarship();
         Add(_starship);
 
+        InitializeTimers();
         SpawnInitialAsteroids();
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        Lock();
+        UpdateTimers(gameTime);
+
+        foreach (var obj in _gameObjects)
+        {
+            obj.Update(gameTime);
+        }
+
+        _world.Step(gameTime.ElapsedGameTime);
+        Unlock();
     }
 
     public void StartRound()
@@ -101,8 +86,7 @@ public class Model : GameComponent, IEnumerable<GameObject>
         _starship.OnCollision += OnStarshipCollision;
         Add(_starship);
 
-        _asteroidSpawnClock.Restart();
-
+        RestartTimers();
         SpawnInitialAsteroids();
     }
 
@@ -115,42 +99,7 @@ public class Model : GameComponent, IEnumerable<GameObject>
 
         _state = ModelState.RoundFinished;
 
-        _asteroidSpawnClock.Stop();
-    }
-
-    public void RestartRound()
-    {
-        FinishRound();
-        StartRound();
-    }
-
-    private void SpawnLargeAsteroid()
-    {
-        Add(ObtainLargeAsteroid());
-    }
-
-    private Asteroid ObtainLargeAsteroid()
-    {
-        var asteroid = _largeAsteroidPool.Obtain();
-        asteroid.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
-        asteroid.ShardSupplier = ObtainMediumAsteroid;
-        asteroid.Broken += OnAsteroidBroken;
-        return asteroid;
-    }
-
-    private Asteroid ObtainMediumAsteroid()
-    {
-        var asteroid = _mediumAsteroidPool.Obtain();
-        asteroid.ShardSupplier = ObtainSmallAsteroid;
-        asteroid.Broken += OnAsteroidBroken;
-        return asteroid;
-    }
-
-    private Asteroid ObtainSmallAsteroid()
-    {
-        var asteroid = _smallAsteroidPool.Obtain();
-        asteroid.Broken += OnAsteroidBroken;
-        return asteroid;
+        StopTimers();
     }
 
     private void SpawnInitialAsteroids()
@@ -161,90 +110,9 @@ public class Model : GameComponent, IEnumerable<GameObject>
         }
     }
 
-    public override void Update(GameTime gameTime)
+    private void SpawnLargeAsteroid()
     {
-        Lock();
-        _asteroidSpawnClock.Update(gameTime);
-
-        foreach (var obj in _gameObjects)
-        {
-            obj.Update(gameTime);
-        }
-
-        _world.Step(gameTime.ElapsedGameTime);
-        Unlock();
-    }
-
-    private void Lock()
-    {
-        _locked = true;
-    }
-
-    private void Unlock()
-    {
-        _locked = false;
-
-        foreach (var obj in _removedGameObjects)
-        {
-            Remove(obj);
-        }
-        _removedGameObjects.Clear();
-
-        foreach (var obj in _addedGameObjects)
-        {
-            Add(obj);
-        }
-        _addedGameObjects.Clear();
-    }
-
-    public void Add(GameObject obj)
-    {
-        if (obj.Model != null)
-        {
-            return;
-        }
-
-        if (_locked)
-        {
-            _addedGameObjects.Add(obj);
-        }
-        else
-        {
-            _gameObjects.Add(obj);
-            _world.Add(obj);
-            obj.Model = this;
-        }
-    }
-
-    public void Remove(GameObject obj)
-    {
-        if (obj.Model != this)
-        {
-            return;
-        }
-
-        if (_locked)
-        {
-            _removedGameObjects.Add(obj);
-        }
-        else
-        {
-            _gameObjects.Remove(obj);
-            _world.Remove(obj);
-            obj.Model = null;
-        }
-    }
-
-    public void Clear()
-    {
-        foreach (var obj in _gameObjects)
-        {
-            obj.Model = null;
-        }
-        _gameObjects.Clear();
-        _world.Clear();
-
-        _starship = null;
+        Add(ObtainLargeAsteroid());
     }
 
     private bool OnStarshipCollision(Fixture sender, Fixture other, Contact contact)
@@ -261,15 +129,5 @@ public class Model : GameComponent, IEnumerable<GameObject>
     private void OnAsteroidBroken(object sender, EventArgs args)
     {
         ++_score;
-    }
-
-    IEnumerator<GameObject> IEnumerable<GameObject>.GetEnumerator()
-    {
-        return ((IEnumerable<GameObject>)_gameObjects).GetEnumerator();
-    }
-
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-    {
-        return ((System.Collections.IEnumerable)_gameObjects).GetEnumerator();
     }
 }

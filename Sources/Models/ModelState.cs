@@ -16,9 +16,9 @@
 
 namespace MonoAsteroids;
 
-public class Ufo : PoolableGameObject
+public enum ModelState
 {
-    public override void Reset()
-    {
-    }
+    Fresh,
+    RoundStarted,
+    RoundFinished
 }
