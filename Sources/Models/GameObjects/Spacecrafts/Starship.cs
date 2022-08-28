@@ -18,7 +18,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
 
-public class Starship : GameObject
+public class Starship : Spacecraft
 {
     private readonly LaserGun _laserGun;
     private readonly MachineGun _machineGun;
@@ -32,25 +32,6 @@ public class Starship : GameObject
     public LaserGun LaserGun => _laserGun;
 
     public MachineGun MachineGun => _machineGun;
-
-    public float EngageImpulse { get; set; } = 0.001f;
-
-    public float RotationSpeed { get; set; } = 5f;
-
-    public void Engage()
-    {
-        ApplyLinearImpulse(LookDirection * EngageImpulse);
-    }
-
-    public void RotateLeft(float delta)
-    {
-        Rotation -= RotationSpeed * delta;
-    }
-
-    public void RotateRight(float delta)
-    {
-        Rotation += RotationSpeed * delta;
-    }
 
     public override void Update(GameTime gameTime)
     {

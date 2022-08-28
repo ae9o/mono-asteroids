@@ -55,6 +55,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
     private Ufo ObtainUfo()
     {
         var ufo = _ufoPool.Obtain();
+        ufo.Target = _starship;
         ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
         return ufo;
     }
