@@ -15,6 +15,8 @@
  */
 
 using Microsoft.Xna.Framework;
+using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace MonoAsteroids;
 
@@ -39,5 +41,12 @@ public class Starship : Spacecraft
 
         _laserGun.Update(gameTime);
         _machineGun.Update(gameTime);
+    }
+
+    protected override bool OnCollisionValidating(Fixture sender, Fixture other, Contact contact)
+    {
+        Break(this);
+
+        return base.OnCollisionValidating(sender, other, contact);
     }
 }

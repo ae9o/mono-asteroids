@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
-using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace MonoAsteroids;
 
@@ -82,7 +81,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         _starship = GameObjectFactory.NewDefaultStarship();
         _starship.Position = WorldCenter;
         _starship.BlowSupplier = ObtainBlow;
-        _starship.OnCollision += OnStarshipCollision;
+        _starship.Broken += OnStarshipBroken;
         Add(_starship);
 
         RestartTimers();
@@ -101,13 +100,12 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         StopTimers();
     }
 
-    private bool OnStarshipCollision(Fixture sender, Fixture other, Contact contact)
+    private void OnStarshipBroken(GameObject sender, EventArgs e)
     {
         FinishRound();
-        return true;
     }
 
-    private void OnAsteroidBroken(GameObject sender, EventArgs e)
+    private void OnScorableObjectBroken(GameObject sender, EventArgs e)
     {
         _score += sender.ScorePoints;
     }

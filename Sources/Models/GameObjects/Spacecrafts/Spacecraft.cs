@@ -16,13 +16,13 @@
 
 using System;
 using Microsoft.Xna.Framework;
-using tainicom.Aether.Physics2D.Dynamics;
-using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace MonoAsteroids;
 
-public class Spacecraft : PoolableGameObject
+public class Spacecraft : PoolableGameObject, IBreakable
 {
+    public event GameEventHandler Broken;
+
     public float EngageImpulse { get; set; } = 0.001f;
 
     public float RotationSpeed { get; set; } = 5f;
@@ -49,14 +49,7 @@ public class Spacecraft : PoolableGameObject
         Rotation += RotationSpeed * delta;
     }
 
-    protected override bool OnCollisionValidating(Fixture sender, Fixture other, Contact contact)
-    {
-        Blow();
-
-        return base.OnCollisionValidating(sender, other, contact);
-    }
-
-    protected virtual void Blow()
+    public virtual void Break(GameObject sender)
     {
         if (BlowSupplier != null)
         {
@@ -66,8 +59,24 @@ public class Spacecraft : PoolableGameObject
             Model.Add(blow);
         }
 
+        OnBroken();
         Remove();
     }
 
-    public override void Reset() {}
+    protected virtual void OnBroken()
+    {
+        Broken?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected override void OnRemoved()
+    {
+        base.OnRemoved();
+
+        ReturnToPool();
+    }
+
+    public override void Reset()
+    {
+        Broken = null;
+    }
 }

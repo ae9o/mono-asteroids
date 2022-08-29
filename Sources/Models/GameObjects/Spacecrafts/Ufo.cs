@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-using System;
 using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
 
-public class Ufo : Spacecraft, IBreakable
+public class Ufo : Spacecraft
 {
-    public event GameEventHandler Broken;
-
     public GameObject Target { get; set; }
 
     public override void Update(GameTime gameTime)
@@ -49,27 +46,10 @@ public class Ufo : Spacecraft, IBreakable
         return direction;
     }
 
-    public virtual void Break(GameObject sender)
-    {
-        OnBroken();
-        Remove();
-    }
-
-    protected virtual void OnBroken()
-    {
-        Broken?.Invoke(this, EventArgs.Empty);
-    }
-
-    protected override void OnRemoved()
-    {
-        base.OnRemoved();
-
-        ReturnToPool();
-    }
-
     public override void Reset()
     {
+        base.Reset();
+
         Target = null;
-        Broken = null;
     }
 }

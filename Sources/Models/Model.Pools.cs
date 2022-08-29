@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -35,7 +34,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         var asteroid = _largeAsteroidPool.Obtain();
         asteroid.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight, asteroid.Size);
         asteroid.ShardSupplier = ObtainMediumAsteroid;
-        asteroid.Broken += OnAsteroidBroken;
+        asteroid.Broken += OnScorableObjectBroken;
         return asteroid;
     }
 
@@ -43,14 +42,14 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
     {
         var asteroid = _mediumAsteroidPool.Obtain();
         asteroid.ShardSupplier = ObtainSmallAsteroid;
-        asteroid.Broken += OnAsteroidBroken;
+        asteroid.Broken += OnScorableObjectBroken;
         return asteroid;
     }
 
     private Asteroid ObtainSmallAsteroid()
     {
         var asteroid = _smallAsteroidPool.Obtain();
-        asteroid.Broken += OnAsteroidBroken;
+        asteroid.Broken += OnScorableObjectBroken;
         return asteroid;
     }
 
@@ -60,6 +59,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         ufo.Target = _starship;
         ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight, ufo.Size);
         ufo.BlowSupplier = ObtainBlow;
+        ufo.Broken += OnScorableObjectBroken;
         return ufo;
     }
 
