@@ -52,6 +52,8 @@ public class LaserGun : Gun<LaserRay>
 
     public float ChargingInterval { get; set; } = 3f;
 
+    public double ChargingPercent => _chargingTimer.CurrentTime.TotalSeconds / ChargingInterval;
+
     public override void Fire()
     {
         if (_currentCharge > 0)

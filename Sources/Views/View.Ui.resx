@@ -1,0 +1,35 @@
+<root>
+    <data name="Welcome" xml:space="preserve">
+        <value>Press space to start</value>
+    </data>
+    <data name="GameOver" xml:space="preserve">
+        <value>Game over</value>
+    </data>
+    <data name="Score" xml:space="preserve">
+        <value>Score: {0}</value>
+    </data>
+    <data name="LaserAmmo" xml:space="preserve">
+        <value>Laser ammo</value>
+    </data>
+    <data name="Position" xml:space="preserve">
+        <value>Coords: ({0:f0}:{1:f0})</value>
+    </data>
+    <data name="Angle" xml:space="preserve">
+        <value>Angle: {0:f0}</value>
+    </data>
+    <data name="Speed" xml:space="preserve">
+        <value>Speed: {0:f1}</value>
+    </data>
+    <data name="Bang" xml:space="preserve">
+        <value>Bang!</value>
+    </data>
+    <data name="FinalScore" xml:space="preserve">
+        <value>Final score: {0}</value>
+    </data>
+    <data name="RestartTip" xml:space="preserve">
+        <value>Press space to restart</value>
+    </data>
+    <data name="Faq" xml:space="preserve">
+        <value>Move = [W], [A], [D], [Arrows]\nFire = [Mouse left], [Mouse right]</value>
+    </data>
+</root>
