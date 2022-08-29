@@ -34,9 +34,9 @@ public class Asteroid : PoolableGameObject, IBreakable
 
     public float MaxShardAngularVelocity { get; set; } = 0.5f;
 
-    public float MinShardAngularOffset { get; set; } = -1.5f;
+    public float MinShardAngularOffset { get; set; } = -0.75f;
 
-    public float MaxShardAngularOffset { get; set; } = 1.5f;
+    public float MaxShardAngularOffset { get; set; } = 0.75f;
 
     public float ShardAcceleration { get; set; } = 1.25f;
 
@@ -47,14 +47,16 @@ public class Asteroid : PoolableGameObject, IBreakable
             return;
         }
 
+        var scatterDistance = Size.X * 0.5f;
         for (int i = 0, n = RandomUtils.Random.Next(MinShardCount, MaxShardCount + 1); i < n; ++i)
         {
-            var angularOffset = Complex.FromAngle(RandomUtils.Random.NextSingle(MinShardAngularOffset, MaxShardAngularOffset));
+            var angularOffset = Complex.FromAngle(RandomUtils.Random.NextSingle(MinShardAngularOffset,
+                    MaxShardAngularOffset));
 
             var shard = ShardSupplier();
             shard.LinearVelocity = Complex.Multiply(LinearVelocity, ref angularOffset) * ShardAcceleration;
             shard.AngularVelocity = RandomUtils.Random.NextSingle(MinShardAngularVelocity, MaxShardAngularVelocity);
-            shard.Position = Position;
+            shard.Position = Position + RandomUtils.Random.NextVector(0, scatterDistance);
             Model.Add(shard);
         }
     }
