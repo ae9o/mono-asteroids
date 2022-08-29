@@ -107,8 +107,8 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         return true;
     }
 
-    private void OnAsteroidBroken(object sender, EventArgs args)
+    private void OnAsteroidBroken(GameObject sender, EventArgs e)
     {
-        ++_score;
+        _score += sender.ScorePoints;
     }
 }

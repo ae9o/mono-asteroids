@@ -56,6 +56,7 @@ public static class GameObjectFactory
         asteroid.Size = new Vector2(0.1f, 0.1f);
         asteroid.LinearVelocity = RandomUtils.Random.NextVector(0.1f, 0.2f);
         asteroid.AngularVelocity = RandomUtils.Random.NextSingle(-0.7f, 0.7f);
+        asteroid.ScorePoints = 10;
 
         var fixture = asteroid.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat2;
@@ -68,6 +69,7 @@ public static class GameObjectFactory
     {
         Asteroid asteroid = new Asteroid();
         asteroid.Size = new Vector2(0.05f, 0.05f);
+        asteroid.ScorePoints = 20;
 
         var fixture = asteroid.CreateCircle(0.025f, 1f);
         fixture.CollisionCategories = Category.Cat2;
@@ -80,6 +82,7 @@ public static class GameObjectFactory
     {
         Asteroid asteroid = new Asteroid();
         asteroid.Size = new Vector2(0.025f, 0.025f);
+        asteroid.ScorePoints = 30;
 
         var fixture = asteroid.CreateCircle(0.0125f, 1f);
         fixture.CollisionCategories = Category.Cat2;
@@ -123,6 +126,7 @@ public static class GameObjectFactory
         ufo.Size = new Vector2(0.1f, 0.1f);
         ufo.EngageImpulse = 0.00015f;
         ufo.LinearDamping = 5f;
+        ufo.ScorePoints = 40;
 
         var fixture = ufo.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat2;

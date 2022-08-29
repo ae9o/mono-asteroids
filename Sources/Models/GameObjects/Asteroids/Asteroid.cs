@@ -22,7 +22,7 @@ namespace MonoAsteroids;
 
 public class Asteroid : PoolableGameObject, IBreakable
 {
-    public event EventHandler Broken;
+    public event GameEventHandler Broken;
 
     public Func<Asteroid> ShardSupplier { get; set; }
 

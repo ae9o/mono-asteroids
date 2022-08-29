@@ -21,7 +21,7 @@ namespace MonoAsteroids;
 
 public class Ufo : Spacecraft, IBreakable
 {
-    public event EventHandler Broken;
+    public event GameEventHandler Broken;
 
     public GameObject Target { get; set; }
 
