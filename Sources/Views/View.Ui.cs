@@ -123,7 +123,7 @@ public partial class View : DrawableGameComponent
         _speedLabel.Text = string.Format(_rm.GetString("Speed"), 0);
 
         var statsPanel = new VerticalStackPanel();
-        statsPanel.Width = 100;
+        statsPanel.Width = 120;
         statsPanel.Spacing = 10;
         statsPanel.Widgets.Add(_scoreLabel);
         statsPanel.Widgets.Add(_positionLabel);

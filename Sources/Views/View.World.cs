@@ -17,16 +17,20 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoAsteroids;
 
 public partial class View : DrawableGameComponent
 {
     private readonly Dictionary<Type, IDrawable> _drawables = new Dictionary<Type, IDrawable>();
+    Texture2D _backgroundTexture;
 
     private void LoadDrawables()
     {
         var content = Game.Content;
+
+        _backgroundTexture = content.Load<Texture2D>("Backgrounds/Space");
 
         _drawables.Add(typeof(Starship), new TextureDrawable(content, "Sprites/StarshipSprite"));
         _drawables.Add(typeof(Asteroid), new TextureDrawable(content, "Sprites/AsteroidSprite"));
@@ -38,6 +42,8 @@ public partial class View : DrawableGameComponent
 
     private void UnloadDrawables()
     {
+        _backgroundTexture.Dispose();
+
         foreach (var drawable in _drawables)
         {
             if (drawable.Value is IDisposable)
@@ -49,6 +55,33 @@ public partial class View : DrawableGameComponent
     }
 
     private void DrawWorld(GameTime gameTime)
+    {
+        DrawBackground();
+        DrawGameObjects();
+    }
+
+    private void DrawBackground()
+    {
+        _spriteBatch.Begin();
+        var v = new Vector2();
+        var dx = _backgroundTexture.Width;
+        var dy = _backgroundTexture.Height;
+        do
+        {
+            do
+            {
+                _spriteBatch.Draw(_backgroundTexture, v, Color.White);
+                v.X += dx;
+            }
+            while (v.X < _viewportSize.X);
+            v.Y += dy;
+            v.X = 0;
+        }
+        while (v.Y < _viewportSize.Y);
+        _spriteBatch.End();
+    }
+
+    private void DrawGameObjects()
     {
         _spriteBatch.Begin(transformMatrix: _viewportScaleMatrix);
         foreach (var obj in _model)
