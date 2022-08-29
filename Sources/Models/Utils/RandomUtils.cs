@@ -29,31 +29,33 @@ public static class RandomUtils
         return (Edge)random.Next((int)Edge.All);
     }
 
-    public static Vector2 NextPositionOutsideWorld(this Random random, float worldWidth, float worldHeight)
+    public static Vector2 NextPositionOutsideWorld(this Random random, float worldWidth, float worldHeight,
+            Vector2 objectSize)
     {
-        Vector2 pos = new Vector2();
+        var halfObjectSize = objectSize * 0.5f;
+        var pos = new Vector2();
 
         switch (random.NextEdge())
         {
             case Edge.Left:
-                pos.X = 0;
+                pos.X = -halfObjectSize.X;
                 pos.Y = worldHeight * random.NextSingle();
                 break;
 
             case Edge.Top:
                 pos.X = worldWidth * random.NextSingle();
-                pos.Y = 0;
+                pos.Y = -halfObjectSize.Y;
                 break;
 
             case Edge.Right:
-                pos.X = worldWidth;
+                pos.X = worldWidth + halfObjectSize.X;
                 pos.Y = worldHeight * random.NextSingle();
                 break;
 
             case Edge.Bottom:
             default:
                 pos.X = worldWidth * random.NextSingle();
-                pos.Y = worldHeight;
+                pos.Y = worldHeight + halfObjectSize.Y;
                 break;
         }
 

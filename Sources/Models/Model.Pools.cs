@@ -31,7 +31,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
     private Asteroid ObtainLargeAsteroid()
     {
         var asteroid = _largeAsteroidPool.Obtain();
-        asteroid.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
+        asteroid.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight, asteroid.Size);
         asteroid.ShardSupplier = ObtainMediumAsteroid;
         asteroid.Broken += OnAsteroidBroken;
         return asteroid;
@@ -56,7 +56,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
     {
         var ufo = _ufoPool.Obtain();
         ufo.Target = _starship;
-        ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight);
+        ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight, ufo.Size);
         return ufo;
     }
 
