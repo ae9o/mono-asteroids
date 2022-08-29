@@ -33,6 +33,7 @@ public partial class View : DrawableGameComponent
         _drawables.Add(typeof(Ufo), new TextureDrawable(content, "Sprites/UfoSprite"));
         _drawables.Add(typeof(Bullet), new TextureDrawable(content, "Sprites/BulletSprite"));
         _drawables.Add(typeof(LaserRay), new TextureDrawable(content, "Sprites/LaserRaySprite"));
+        _drawables.Add(typeof(Blow), new TextureDrawable(content, "Sprites/BlowSprite"));
     }
 
     private void UnloadDrawables()

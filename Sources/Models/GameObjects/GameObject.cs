@@ -17,6 +17,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace MonoAsteroids;
 
@@ -111,11 +112,17 @@ public abstract class GameObject : Body
 
     protected virtual void OnAdded()
     {
+        OnCollision += OnCollisionValidating;
         Added?.Invoke(this, EventArgs.Empty);
     }
 
     protected virtual void OnRemoved()
     {
         Removed?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual bool OnCollisionValidating(Fixture sender, Fixture other, Contact contact)
+    {
+        return true;
     }
 }

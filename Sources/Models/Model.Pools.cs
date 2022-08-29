@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -21,12 +22,13 @@ namespace MonoAsteroids;
 
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
-    public const int InitialAsteroidCount = 3;
+    public const int InitialAsteroidCount = 2;
 
     private readonly Pool<Asteroid> _largeAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewLargeAsteroid);
     private readonly Pool<Asteroid> _mediumAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewMediumAsteroid);
     private readonly Pool<Asteroid> _smallAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewSmallAsteroid);
     private readonly Pool<Ufo> _ufoPool = new Pool<Ufo>(GameObjectFactory.NewDefaultUfo);
+    private readonly Pool<Blow> _blowPool = new Pool<Blow>(GameObjectFactory.NewDefaultBlow);
 
     private Asteroid ObtainLargeAsteroid()
     {
@@ -57,7 +59,13 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         var ufo = _ufoPool.Obtain();
         ufo.Target = _starship;
         ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight, ufo.Size);
+        ufo.BlowSupplier = ObtainBlow;
         return ufo;
+    }
+
+    private Blow ObtainBlow()
+    {
+        return _blowPool.Obtain();
     }
 
     private void SpawnInitialAsteroids()

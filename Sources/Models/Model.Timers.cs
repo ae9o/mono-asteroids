@@ -24,7 +24,7 @@ namespace MonoAsteroids;
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
     public const float AsteroidSpawnInterval = 10f;
-    public const float UfoSpawnInterval = 10f;
+    public const float UfoSpawnInterval = 5f;
 
     private ContinuousClock _asteroidSpawnClock;
     private ContinuousClock _ufoSpawnClock;

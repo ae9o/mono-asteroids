@@ -81,6 +81,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
 
         _starship = GameObjectFactory.NewDefaultStarship();
         _starship.Position = WorldCenter;
+        _starship.BlowSupplier = ObtainBlow;
         _starship.OnCollision += OnStarshipCollision;
         Add(_starship);
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using MonoGame.Extended;
 using Microsoft.Xna.Framework;
 using tainicom.Aether.Physics2D.Dynamics;
@@ -120,13 +121,20 @@ public static class GameObjectFactory
     {
         var ufo = new Ufo();
         ufo.Size = new Vector2(0.1f, 0.1f);
-        ufo.EngageImpulse = 0.0001f;
-        ufo.LinearDamping = 10f;
+        ufo.EngageImpulse = 0.00015f;
+        ufo.LinearDamping = 5f;
 
         var fixture = ufo.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat2;
         fixture.CollidesWith = Category.Cat1 | Category.Cat3;
 
         return ufo;
+    }
+
+    public static Blow NewDefaultBlow()
+    {
+        var blow = new Blow();
+        blow.RemoveInterval = TimeSpan.FromMilliseconds(50);
+        return blow;
     }
 }
