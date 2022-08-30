@@ -21,6 +21,10 @@ using tainicom.Aether.Physics2D.Dynamics;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This part of the model contains the key logic of the game. Starts a new game round. Manages the calculation of score
+/// points. Tracks the destruction of the player's spaceship.
+/// </summary>
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
     private ModelState _state;

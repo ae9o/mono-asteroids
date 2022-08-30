@@ -21,6 +21,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoAsteroids;
 
+/// <summary>
+///
+/// <para>This class accepts and interprets user input. The corresponding model layer method is called after
+/// successful interpretation.</para>
+///
+/// <para>Input handlers are collected in a dictionary, that allows to ease binding keyboard keys to different
+/// model actions.</para>
+///
+/// </summary>
 public class InputController : GameComponent
 {
     public const Keys ButtonToStartRound = Keys.Space;

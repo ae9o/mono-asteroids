@@ -19,6 +19,10 @@ using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This part of the model controls the creation of large amounts of game objects. Since the same kinds of objects are
+/// constantly created and destroyed during the game, pooling must be applied.
+/// </summary>
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
     public const int InitialAsteroidCount = 2;

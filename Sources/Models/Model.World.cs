@@ -21,6 +21,9 @@ using MonoGame.Extended.Collections;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This part of the model controls the addition and removal of objects in the game world.
+/// </summary>
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
     public const float WorldWidth = 1.66f;

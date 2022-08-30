@@ -21,6 +21,9 @@ using MonoGame.Extended.Timers;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This part of the model controls the periodic events that occur during the game.
+/// </summary>
 public partial class Model : GameComponent, IEnumerable<GameObject>
 {
     public const float AsteroidSpawnInterval = 10f;
