@@ -16,6 +16,9 @@
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// Implements a machine gun that fires bullets.
+/// </summary>
 public class MachineGun : Gun<Bullet>
 {
     public MachineGun(GameObject parent)

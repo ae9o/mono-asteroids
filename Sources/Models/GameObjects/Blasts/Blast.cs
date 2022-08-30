@@ -20,6 +20,15 @@ using MonoGame.Extended.Timers;
 
 namespace MonoAsteroids;
 
+/// <summary>
+///
+/// <para>This class implements something that appears in the world after an explosion. This something has only one
+/// ability - to disappear without a trace from the world after a while.</para>
+///
+/// <para>Objects of this class are intended for auto pooling. When they are removed from the world, they are
+/// automatically returned to the pool that spawned them.</para>
+///
+/// </summary>
 public class Blast : PoolableGameObject
 {
     private readonly CountdownTimer _removeTimer;

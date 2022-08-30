@@ -20,6 +20,9 @@ using MonoGame.Extended.Timers;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// Implements a laser gun with limited ammo. Its ammo has the ability to regenerate over time.
+/// </summary>
 public class LaserGun : Gun<LaserRay>
 {
     private readonly CountdownTimer _chargingTimer;

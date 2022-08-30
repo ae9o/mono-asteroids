@@ -20,6 +20,17 @@ using tainicom.Aether.Physics2D.Common;
 
 namespace MonoAsteroids;
 
+/// <summary>
+///
+/// <para>Implements a game object that can shatter into shards when it is destroyed.</para>
+///
+/// <para>It has many properties that allow to customize the type of shards, their number, angle and range of
+/// dispersion.</para>
+///
+/// <para>Objects of this class are intended for auto pooling. When they are removed from the world, they are
+/// automatically returned to the pool that spawned them.</para>
+///
+/// </summary>
 public class Asteroid : PoolableGameObject, IBreakable
 {
     public event GameEventHandler Broken;

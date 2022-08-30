@@ -20,6 +20,16 @@ using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace MonoAsteroids;
 
+/// <summary>
+///
+/// <para>The base class for the ammo fired by guns.</para>
+///
+/// <para>Objects of this class destroy on collision other game objects that implement the IBreakable interface.</para>
+///
+/// <para>Objects of this class are intended for auto pooling. When they are removed from the world, they are
+/// automatically returned to the pool that spawned them.</para>
+///
+/// </summary>
 public abstract class Projectile : PoolableGameObject
 {
     public float Speed { get; set; }

@@ -18,6 +18,9 @@ using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This class implements a UFO that pursues the player's spaceship.
+/// </summary>
 public class Ufo : Spacecraft
 {
     public GameObject Target { get; set; }

@@ -16,6 +16,9 @@
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This interface must be implemented by objects intended for pooling.
+/// </summary>
 public interface IPoolable
 {
     void SetReturnToPoolDelegate(ReturnToPoolDelegate returnToPoolDelegate);

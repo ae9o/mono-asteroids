@@ -20,6 +20,18 @@ using MonoGame.Extended.Timers;
 
 namespace MonoAsteroids;
 
+/// <summary>
+///
+/// <para>The base class for a game weapon. Allows to shoot the specified type of ammo. This is a customizable property.
+/// </para>
+///
+/// <para>Allows to set a cooldown that limits the intensity of shooting.</para>
+///
+/// <para>It is not a standalone game object. It binds to the parent game object and uses its characteristics to place
+/// ammo in the world and set the direction of their flight.<para>
+///
+/// </summary>
+/// <typeparam name="T">Type of the ammo.</typeparam>
 public class Gun<T>
     where T : Projectile
 {

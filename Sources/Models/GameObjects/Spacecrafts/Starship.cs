@@ -20,6 +20,14 @@ using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace MonoAsteroids;
 
+/// <summary>
+///
+/// <para>A spaceship controlled by the player. The spaceship has two types of guns that the player can use to destroy
+/// various game objects: machine gun and laser gun.</para>
+///
+/// <para>The spaceship explodes if it collides with another game object.</para>
+///
+/// </summary>
 public class Starship : Spacecraft
 {
     private readonly LaserGun _laserGun;

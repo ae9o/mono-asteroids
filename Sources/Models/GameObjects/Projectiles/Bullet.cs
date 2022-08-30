@@ -16,4 +16,7 @@
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// Ammo for a machine gun.
+/// </summary>
 public class Bullet : Projectile {}

@@ -18,8 +18,26 @@ using System;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This delegate is called by an object that wants to return to the parent pool.
+/// </summary>
+/// <param name="item">Object to be returned to the pool.</param>
 public delegate void ReturnToPoolDelegate(IPoolable item);
 
+/// <summary>
+///
+/// <para>This is a wrapper over a Pool from the MonoGame.Extended library, which allows to get functionality similar to
+/// the functionality of the ObjectPool class from the same MonoGame.Extended library.</para>
+///
+/// <para>The question is, why not just immediately use this ObjectPool?<para>
+///
+/// <para>And because it's broken. Here you can read: https://github.com/craftworkgames/MonoGame.Extended/issues/471
+/// </para>
+///
+/// <para>For 4 years now (OMG!) they can't fix the nullpointer extension when returning objects.</para>
+///
+/// </summary>
+/// /// <typeparam name="T">Poolable object type.</typeparam>
 public class Pool<T>
     where T : class, IPoolable
 {

@@ -16,4 +16,7 @@
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// Ammo for a laser gun.
+/// </summary>
 public class LaserRay : Projectile {}

@@ -16,6 +16,9 @@
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This enum lists the edges of a square shape.
+/// </summary>
 public enum Edge
 {
     Left,

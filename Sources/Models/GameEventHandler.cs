@@ -18,4 +18,9 @@ using System;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// Base delegate for handling various game events.
+/// </summary>
+/// <param name="sender">The game object that fired the event.</param>
+/// <param name="e">Event parameters.</param>
 public delegate void GameEventHandler(GameObject sender, EventArgs e);

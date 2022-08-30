@@ -20,6 +20,9 @@ using MonoGame.Extended;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// A set of auxiliary extensions for working with randoms.
+/// </summary>
 public static class RandomUtils
 {
     public static readonly Random Random = new Random();

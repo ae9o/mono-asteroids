@@ -16,6 +16,9 @@
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// Base class for game objects intended for pooling.
+/// </summary>
 public abstract class PoolableGameObject : GameObject, IPoolable
 {
     private ReturnToPoolDelegate _returnToPoolDelegate;

@@ -19,6 +19,14 @@ using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
 
+/// <summary>
+///
+/// <para>Base class for spacecrafts. Implements movement and rotation capabilities.</para>
+///
+/// <para>Objects of this class are intended for auto pooling. When they are removed from the world, they are
+/// automatically returned to the pool that spawned them.</para>
+///
+/// </summary>
 public class Spacecraft : PoolableGameObject, IBreakable
 {
     public event GameEventHandler Broken;
