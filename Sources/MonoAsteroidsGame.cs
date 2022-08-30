@@ -18,6 +18,9 @@ using Microsoft.Xna.Framework;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// The root class for the MonoGame framework, intended to configure and run the game.
+/// </summary>
 public class MonoAsteroidsGame : Game
 {
     private const int DefaultBackBufferWidth = 1280;
