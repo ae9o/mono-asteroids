@@ -38,10 +38,14 @@ restriction: the logic of the game must stay independent from the presentation l
 ### Used approaches
 
 So what do we have. Very limited time, a tiny set of interacting game objects, the need to strictly separate logic and
-presentation, as well as the requirement to do everything in a certain coding language.
+presentation, as well as the requirement to do everything in a certain coding language (C#).
 
 It was decided to use the classic MVC, isolating the game logic in the model layer, rendering in the view layer, and
-handling user input in the controllers layer.
+handling user input in the controllers layer. The model layer is completely independent and does not use other app
+layers. Model classes do not contain graphical information. They store and process only those data that describe the
+logic of the gameplay. The view layer uses the model in read mode. It independently decides how the game objects should
+look. The controller layer takes user input, interprets it, and calls the appropriate methods on the model. The model
+itself does not interact with the outside world in any way.
 
 There is no ECS here. A tiny inheritance tree of game objects is simply formed in the model. This has reduced
 development time, but of course, it seriously hampers the future expansion of the game's capabilities.
@@ -49,11 +53,18 @@ development time, but of course, it seriously hampers the future expansion of th
 The engineering constraint of the task is clearly executed. The model is completely independent from other parts of the
 game. The app can function without a graphical component.
 
+The game itself is based on the `MonoGame` framework. The `Aether.Physics2D` library is used to handle collisions of
+game objects, which is a C# port of the `Box2d` physics engine. The user interface is built using the `Myra UI` library.
+Excellent assets from the free `Kenney` library are used for texturing. The `DejaVu` font is used to render text. Links
+to all materials are listed below.
+
 ## References
 
 This section contains links to all the libraries, frameworks, and assets used to build the app.
 
 1. [MonoGame framework](https://www.monogame.net/)
-2. [Aether.Physics2D collision detection system](https://github.com/tainicom/Aether.Physics2D)
-3. [Myra UI Library](https://github.com/rds1983/Myra)
-4. [Kenney game assets](https://www.kenney.nl/)
+2. [MonoGame.Extended libraries](https://github.com/craftworkgames/MonoGame.Extended)
+3. [Aether.Physics2D library](https://github.com/tainicom/Aether.Physics2D)
+4. [Myra UI library](https://github.com/rds1983/Myra)
+5. [Kenney game assets](https://www.kenney.nl/)
+6. [DejaVu fonts](https://dejavu-fonts.github.io/)
