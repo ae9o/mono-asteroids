@@ -21,6 +21,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This class draws a simple texture at the position of the game object.
+/// </summary>
 public class TextureDrawable : IDrawable, IDisposable
 {
     private const float CenterOrigin = 0.5f;

@@ -21,10 +21,12 @@ using Microsoft.Xna.Framework;
 using Myra;
 using Myra.Graphics2D.UI;
 using FontStashSharp;
-using Myra.Graphics2D;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This part of the view is responsible for drawing the user interface.
+/// </summary>
 public partial class View : DrawableGameComponent
 {
     private readonly ResourceManager _rm = new ResourceManager("MonoAsteroids.View", Assembly.GetExecutingAssembly());
@@ -72,6 +74,10 @@ public partial class View : DrawableGameComponent
         _desktop.Root = CreateRootPanel();
     }
 
+    /// <summary>
+    /// Creates a panel that spans the entire screen and contains all the UI widgets.
+    /// </summary>
+    /// <returns>Root panel with all the UI widgets.</returns>
     private Panel CreateRootPanel()
     {
         _welcomeLabel = new Label();
@@ -102,6 +108,10 @@ public partial class View : DrawableGameComponent
         return rootPanel;
     }
 
+    /// <summary>
+    /// Creates a panel with information about the player's spaceship.
+    /// </summary>
+    /// <returns>Panel with information about the player's spaceship.</returns>
     private VerticalStackPanel CreateStatsPanel()
     {
         _scoreLabel = new Label();
@@ -134,6 +144,10 @@ public partial class View : DrawableGameComponent
         return statsPanel;
     }
 
+    /// <summary>
+    /// Creates a panel with information about the charge and cooldown of the spaceship's laser.
+    /// </summary>
+    /// <returns>Panel with information about the spaceship's laser.</returns>
     private VerticalStackPanel CreateLaserStatsPanel()
     {
         var laserAmmoLabel = new Label();
@@ -154,6 +168,10 @@ public partial class View : DrawableGameComponent
         return laserStatsPanel;
     }
 
+    /// <summary>
+    /// Creates a panel that is displayed at the end of a game round.
+    /// </summary>
+    /// <returns>Panel with final stats.</returns>
     private Panel CreateFinalStatsPanel()
     {
         var bangLabel = new Label();
@@ -266,7 +284,7 @@ public partial class View : DrawableGameComponent
         _speedLabel.Text = string.Format(_rm.GetString("Speed"), velocity.Length());
     }
 
-    public void DrawUi(GameTime gameTime)
+    public void DrawUi()
     {
         _desktop.Render();
     }

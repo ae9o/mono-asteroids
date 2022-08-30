@@ -19,6 +19,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This part of the view is responsible for setting up the viewport and coordinating the process of rendering the game
+/// world and user interface.
+/// </summary>
 public partial class View : DrawableGameComponent
 {
     private readonly Model _model;
@@ -72,7 +76,7 @@ public partial class View : DrawableGameComponent
     {
         Game.GraphicsDevice.Clear(Color.Black);
 
-        DrawWorld(gameTime);
-        DrawUi(gameTime);
+        DrawWorld();
+        DrawUi();
     }
 }

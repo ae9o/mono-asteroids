@@ -21,10 +21,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This part of the view is responsible for drawing game objects.
+/// </summary>
 public partial class View : DrawableGameComponent
 {
     private readonly Dictionary<Type, IDrawable> _drawables = new Dictionary<Type, IDrawable>();
-    Texture2D _backgroundTexture;
+    private Texture2D _backgroundTexture;
 
     private void LoadDrawables()
     {
@@ -54,7 +57,7 @@ public partial class View : DrawableGameComponent
         _drawables.Clear();
     }
 
-    private void DrawWorld(GameTime gameTime)
+    private void DrawWorld()
     {
         DrawBackground();
         DrawGameObjects();

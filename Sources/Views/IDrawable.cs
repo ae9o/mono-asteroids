@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-namespace MonoAsteroids;
-
 using Microsoft.Xna.Framework.Graphics;
 
+namespace MonoAsteroids;
+
+/// <summary>
+/// This interface must be implemented by classes intended for drawing game objects.
+/// </summary>
 public interface IDrawable
 {
     void Draw(SpriteBatch spriteBatch, GameObject obj);

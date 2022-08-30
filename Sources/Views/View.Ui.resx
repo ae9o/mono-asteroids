@@ -1,3 +1,4 @@
+<!-- This file contains localized UI strings -->
 <root>
     <data name="Welcome" xml:space="preserve">
         <value>Press space to start</value>
