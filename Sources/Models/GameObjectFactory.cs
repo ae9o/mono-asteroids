@@ -135,10 +135,10 @@ public static class GameObjectFactory
         return ufo;
     }
 
-    public static Blow NewDefaultBlow()
+    public static Blast NewDefaultBlast()
     {
-        var blow = new Blow();
-        blow.RemoveInterval = TimeSpan.FromMilliseconds(50);
-        return blow;
+        var blast = new Blast();
+        blast.RemoveInterval = TimeSpan.FromMilliseconds(50);
+        return blast;
     }
 }

@@ -20,7 +20,7 @@ using MonoGame.Extended.Timers;
 
 namespace MonoAsteroids;
 
-public class Blow : PoolableGameObject
+public class Blast : PoolableGameObject
 {
     private readonly CountdownTimer _removeTimer;
 
@@ -34,7 +34,7 @@ public class Blow : PoolableGameObject
         }
     }
 
-    public Blow()
+    public Blast()
     {
         _removeTimer = new CountdownTimer(0);
         _removeTimer.Completed += OnRemoveTimerCompleted;

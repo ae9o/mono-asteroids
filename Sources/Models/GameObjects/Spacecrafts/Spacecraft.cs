@@ -27,7 +27,7 @@ public class Spacecraft : PoolableGameObject, IBreakable
 
     public float RotationSpeed { get; set; } = 5f;
 
-    public Func<GameObject> BlowSupplier { get; set; }
+    public Func<GameObject> BlastSupplier { get; set; }
 
     public void Engage()
     {
@@ -51,12 +51,12 @@ public class Spacecraft : PoolableGameObject, IBreakable
 
     public virtual void Break(GameObject sender)
     {
-        if (BlowSupplier != null)
+        if (BlastSupplier != null)
         {
-            var blow = BlowSupplier();
-            blow.Position = Position;
-            blow.Size = Size;
-            Model.Add(blow);
+            var blast = BlastSupplier();
+            blast.Position = Position;
+            blast.Size = Size;
+            Model.Add(blast);
         }
 
         OnBroken();

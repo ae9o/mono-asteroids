@@ -43,7 +43,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/AsteroidSprite.png
 
-#begin Sprites/BlowSprite.png
+#begin Sprites/BlastSprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -53,7 +53,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/BlowSprite.png
+/build:Sprites/BlastSprite.png
 
 #begin Sprites/BulletSprite.png
 /importer:TextureImporter

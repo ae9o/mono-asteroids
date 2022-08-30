@@ -80,7 +80,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
 
         _starship = GameObjectFactory.NewDefaultStarship();
         _starship.Position = WorldCenter;
-        _starship.BlowSupplier = ObtainBlow;
+        _starship.BlastSupplier = ObtainBlast;
         _starship.Broken += OnStarshipBroken;
         Add(_starship);
 

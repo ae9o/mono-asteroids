@@ -27,7 +27,7 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
     private readonly Pool<Asteroid> _mediumAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewMediumAsteroid);
     private readonly Pool<Asteroid> _smallAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewSmallAsteroid);
     private readonly Pool<Ufo> _ufoPool = new Pool<Ufo>(GameObjectFactory.NewDefaultUfo);
-    private readonly Pool<Blow> _blowPool = new Pool<Blow>(GameObjectFactory.NewDefaultBlow);
+    private readonly Pool<Blast> _blastPool = new Pool<Blast>(GameObjectFactory.NewDefaultBlast);
 
     private Asteroid ObtainLargeAsteroid()
     {
@@ -58,14 +58,14 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         var ufo = _ufoPool.Obtain();
         ufo.Target = _starship;
         ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(WorldWidth, WorldHeight, ufo.Size);
-        ufo.BlowSupplier = ObtainBlow;
+        ufo.BlastSupplier = ObtainBlast;
         ufo.Broken += OnScorableObjectBroken;
         return ufo;
     }
 
-    private Blow ObtainBlow()
+    private Blast ObtainBlast()
     {
-        return _blowPool.Obtain();
+        return _blastPool.Obtain();
     }
 
     private void SpawnInitialAsteroids()
