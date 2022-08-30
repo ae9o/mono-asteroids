@@ -32,6 +32,8 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
     private readonly Pool<Asteroid> _smallAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewSmallAsteroid);
     private readonly Pool<Ufo> _ufoPool = new Pool<Ufo>(GameObjectFactory.NewDefaultUfo);
     private readonly Pool<Blast> _blastPool = new Pool<Blast>(GameObjectFactory.NewDefaultBlast);
+    private readonly Pool<Bullet> _bulletPool = new Pool<Bullet>(GameObjectFactory.NewDefaultBullet);
+    private readonly Pool<LaserRay> _laserRayPool = new Pool<LaserRay>(GameObjectFactory.NewDefaultLaserRay);
 
     private Asteroid ObtainLargeAsteroid()
     {
@@ -70,6 +72,16 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
     private Blast ObtainBlast()
     {
         return _blastPool.Obtain();
+    }
+
+    private Bullet ObtainBullet()
+    {
+        return _bulletPool.Obtain();
+    }
+
+    private LaserRay ObtainLaserRay()
+    {
+        return _laserRayPool.Obtain();
     }
 
     private void SpawnInitialAsteroids()
