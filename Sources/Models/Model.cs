@@ -84,9 +84,6 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
 
         _starship = GameObjectFactory.NewDefaultStarship();
         _starship.Position = WorldCenter;
-        _starship.MachineGun.ProjectileSupplier = ObtainBullet;
-        _starship.LaserGun.ProjectileSupplier = ObtainLaserRay;
-        _starship.BlastSupplier = ObtainBlast;
         _starship.Broken += OnStarshipBroken;
         Add(_starship);
 

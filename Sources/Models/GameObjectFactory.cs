@@ -31,6 +31,9 @@ public static class GameObjectFactory
     {
         Starship starship = new Starship();
         starship.Size = new Vector2(0.1f, 0.1f);
+        starship.MachineGun.ProjectileSupplier = NewDefaultBullet;
+        starship.LaserGun.ProjectileSupplier = NewDefaultLaserRay;
+        starship.BlastSupplier = NewDefaultBlast;
         starship.LinearDamping = 5f;
         starship.AngularDamping = 10f;
 
@@ -129,6 +132,7 @@ public static class GameObjectFactory
         ufo.EngageImpulse = 0.00015f;
         ufo.LinearDamping = 5f;
         ufo.ScorePoints = 40;
+        ufo.BlastSupplier = NewDefaultBlast;
 
         var fixture = ufo.CreateCircle(0.05f, 1f);
         fixture.CollisionCategories = Category.Cat2;
