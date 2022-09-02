@@ -110,6 +110,6 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
 
     private void OnScorableObjectBroken(GameObject sender, EventArgs e)
     {
-        _score += sender.ScorePoints;
+        _score += ((IScorable)sender).ScorePoints;
     }
 }

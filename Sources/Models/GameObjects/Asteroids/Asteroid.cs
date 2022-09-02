@@ -31,7 +31,7 @@ namespace MonoAsteroids;
 /// automatically returned to the pool that spawned them.</para>
 ///
 /// </summary>
-public class Asteroid : PoolableGameObject, IBreakable
+public class Asteroid : PoolableGameObject, IBreakable, IScorable
 {
     public event GameEventHandler Broken;
 
@@ -50,6 +50,8 @@ public class Asteroid : PoolableGameObject, IBreakable
     public float MaxShardAngularOffset { get; set; } = 0.75f;
 
     public float ShardAcceleration { get; set; } = 1.25f;
+
+    public int ScorePoints { get; set; }
 
     private void ScatterShards()
     {

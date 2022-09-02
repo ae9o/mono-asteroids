@@ -21,9 +21,11 @@ namespace MonoAsteroids;
 /// <summary>
 /// This class implements a UFO that pursues the player's spaceship.
 /// </summary>
-public class Ufo : Spacecraft
+public class Ufo : Spacecraft, IScorable
 {
     public GameObject Target { get; set; }
+
+    public int ScorePoints { get; set; }
 
     public override void Update(GameTime gameTime)
     {

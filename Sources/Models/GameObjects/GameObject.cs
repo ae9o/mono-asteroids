@@ -67,8 +67,6 @@ public abstract class GameObject : Body
 
     public Vector2 Size { get; set; }
 
-    public int ScorePoints { get; set; }
-
     public Vector2 LookDirection => GetWorldVector(Model.WorldUpDirection);
 
     public virtual void Update(GameTime gameTime)
