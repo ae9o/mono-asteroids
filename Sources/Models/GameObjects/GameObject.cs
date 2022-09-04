@@ -34,7 +34,7 @@ public abstract class GameObject : Body
 
     public Vector2 Size { get; set; }
 
-    public Vector2 LookDirection => GetWorldVector(Stage.StageUpDirection);
+    public Vector2 LookDirection => GetWorldVector(Stage.UpDirection);
 
     public void Remove()
     {
@@ -57,18 +57,18 @@ public abstract class GameObject : Body
 
         if (pos.X < -halfSize.X)
         {
-            tmp.X = Stage.StageWidth + halfSize.X;
+            tmp.X = Stage.Width + halfSize.X;
         }
-        else if (pos.X > Stage.StageWidth + halfSize.X)
+        else if (pos.X > Stage.Width + halfSize.X)
         {
             tmp.X = -halfSize.X;
         }
 
         if (pos.Y < -halfSize.Y)
         {
-            tmp.Y = Stage.StageHeight + halfSize.Y;
+            tmp.Y = Stage.Height + halfSize.Y;
         }
-        else if (pos.Y > Stage.StageHeight + halfSize.Y)
+        else if (pos.Y > Stage.Height + halfSize.Y)
         {
             tmp.Y = -halfSize.Y;
         }

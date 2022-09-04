@@ -32,7 +32,7 @@ public static class RandomUtils
         return (Edge)random.Next((int)Edge.All);
     }
 
-    public static Vector2 NextPositionOutsideWorld(this Random random, float worldWidth, float worldHeight,
+    public static Vector2 NextPositionOutsideStage(this Random random, float stageWidth, float stageHeight,
             Vector2 objectSize)
     {
         var halfObjectSize = objectSize * 0.5f;
@@ -42,23 +42,23 @@ public static class RandomUtils
         {
             case Edge.Left:
                 pos.X = -halfObjectSize.X;
-                pos.Y = worldHeight * random.NextSingle();
+                pos.Y = stageHeight * random.NextSingle();
                 break;
 
             case Edge.Top:
-                pos.X = worldWidth * random.NextSingle();
+                pos.X = stageWidth * random.NextSingle();
                 pos.Y = -halfObjectSize.Y;
                 break;
 
             case Edge.Right:
-                pos.X = worldWidth + halfObjectSize.X;
-                pos.Y = worldHeight * random.NextSingle();
+                pos.X = stageWidth + halfObjectSize.X;
+                pos.Y = stageHeight * random.NextSingle();
                 break;
 
             case Edge.Bottom:
             default:
-                pos.X = worldWidth * random.NextSingle();
-                pos.Y = worldHeight + halfObjectSize.Y;
+                pos.X = stageWidth * random.NextSingle();
+                pos.Y = stageHeight + halfObjectSize.Y;
                 break;
         }
 

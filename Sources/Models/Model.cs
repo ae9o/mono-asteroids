@@ -22,7 +22,7 @@ namespace MonoAsteroids;
 /// <summary>
 /// Implements the key logic of the game.
 /// </summary>
-public partial class Model : GameComponent
+public class Model : GameComponent
 {
     // The app has only one model, which is used by different subsystems.
     // It is advisable to make it a singleton.
@@ -105,7 +105,7 @@ public partial class Model : GameComponent
         _stage.Clear();
 
         _starship = GameObjectFactory.NewDefaultStarship();
-        _starship.Position = Stage.StageCenter;
+        _starship.Position = Stage.Center;
         _starship.Broken += OnStarshipBroken;
         _stage.Add(_starship);
 
@@ -145,7 +145,7 @@ public partial class Model : GameComponent
     private Asteroid ObtainLargeAsteroid()
     {
         var asteroid = _largeAsteroidPool.Obtain();
-        asteroid.Position = RandomUtils.Random.NextPositionOutsideWorld(Stage.StageWidth, Stage.StageHeight,
+        asteroid.Position = RandomUtils.Random.NextPositionOutsideStage(Stage.Width, Stage.Height,
                 asteroid.Size);
         asteroid.ShardSupplier = ObtainMediumAsteroid;
         asteroid.Broken += OnScorableObjectBroken;
@@ -170,7 +170,7 @@ public partial class Model : GameComponent
     private Ufo ObtainUfo()
     {
         var ufo = _ufoPool.Obtain();
-        ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(Stage.StageWidth, Stage.StageHeight, ufo.Size);
+        ufo.Position = RandomUtils.Random.NextPositionOutsideStage(Stage.Width, Stage.Height, ufo.Size);
         ufo.Target = _starship;
         ufo.Broken += OnScorableObjectBroken;
         return ufo;

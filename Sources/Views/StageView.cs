@@ -52,8 +52,8 @@ public class StageView : DrawableGameComponent
         _viewportSize.X = viewport.Width;
         _viewportSize.Y = viewport.Height;
 
-        _scaleX = viewport.Width / Stage.StageWidth;
-        _scaleY = viewport.Height / Stage.StageHeight;
+        _scaleX = viewport.Width / Stage.Width;
+        _scaleY = viewport.Height / Stage.Height;
         _viewportScaleMatrix = Matrix.CreateScale(_scaleX, _scaleY, 1.0f);
     }
 

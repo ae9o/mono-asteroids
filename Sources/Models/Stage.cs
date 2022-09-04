@@ -26,11 +26,11 @@ namespace MonoAsteroids;
 /// </summary>
 public class Stage : IEnumerable<GameObject>
 {
-    public const float StageWidth = 1.66f;
-    public const float StageHeight = 1f;
+    public const float Width = 1.66f;
+    public const float Height = 1f;
 
-    public static readonly Vector2 StageCenter = new Vector2(StageWidth * 0.5f, StageHeight * 0.5f);
-    public static readonly Vector2 StageUpDirection = -Vector2.UnitY;
+    public static readonly Vector2 Center = new Vector2(Width * 0.5f, Height * 0.5f);
+    public static readonly Vector2 UpDirection = -Vector2.UnitY;
 
     private readonly World _world;
     private readonly Bag<GameObject> _addedGameObjects = new Bag<GameObject>();

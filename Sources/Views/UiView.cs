@@ -60,8 +60,8 @@ public class UiView : DrawableGameComponent
         MyraEnvironment.Game = Game;
 
         var viewport = Game.GraphicsDevice.Viewport;
-        _scaleX = viewport.Width / Stage.StageWidth;
-        _scaleY = viewport.Height / Stage.StageHeight;
+        _scaleX = viewport.Width / Stage.Width;
+        _scaleY = viewport.Height / Stage.Height;
 
         CreateFonts();
         CreateDesktop();

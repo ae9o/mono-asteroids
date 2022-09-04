@@ -47,8 +47,7 @@ public static class GameObjectFactory
     {
         Starship starship = new Starship();
         starship.Size = new Vector2(0.1f, 0.1f);
-        starship.Position = RandomUtils.Random.NextPositionOutsideWorld(Stage.StageWidth, Stage.StageHeight,
-                starship.Size);
+        starship.Position = RandomUtils.Random.NextPositionOutsideStage(Stage.Width, Stage.Height, starship.Size);
         starship.LinearVelocity = new Vector2(0.2f, -0.2f);
         starship.Rotation = 0.75f;
         return starship;
