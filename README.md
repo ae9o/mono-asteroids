@@ -5,11 +5,8 @@
 # MonoAsteroids game
 
 This app is an analogue of the well-known game in which you have to shoot at asteroids and dodge UFOs while flying on a
-starship. Btw, the original title is still trademarked. Therefore, this app has an absolutely unique, completely 
-different name :)
-
-The development of this game was started as part of a test task a few days ago. As usual, I distribute its code under
-the Apache License 2.0. Feel free to use it for any purpose.
+starship. The development of this game was started as part of a test task, and its code is distributed under the Apache
+License 2.0. Feel free to use it for any purpose.
 
 ## Implementation details
 
@@ -20,7 +17,7 @@ As stated above, the player flies and shoots everything.
 The spaceship can only accelerate forward and also rotate left and right. Another important detail: the screen borders
 do not impede movement, but work like portals that move game objects to the opposite side of the game field.
 
-Anything that touches the spaceship destroys it. And UFOs are chasing the player. What a cruel world in this game.
+Anything that touches the spaceship destroys it. And UFOs are chasing the player.
 
 There are two types of weapons to counter it:
 
@@ -29,8 +26,6 @@ There are two types of weapons to counter it:
 Shots recover over time.
 
 In such conditions it is necessary to score as many points as possible.
-
-And one more thing.
 
 All of the previous restrictions have been in terms of game design, but there is also an important engineering
 restriction: the logic of the game must stay independent from the presentation layer.
