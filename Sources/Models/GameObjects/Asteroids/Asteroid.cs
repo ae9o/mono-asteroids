@@ -22,7 +22,7 @@ namespace MonoAsteroids;
 
 /// <summary>
 ///
-/// <para>Implements a game object that can shatter into shards when it is destroyed.</para>
+/// <para>An asteroid that can shatter into shards when it is destroyed.</para>
 ///
 /// <para>It has many properties that allow to customize the type of shards, their number, angle and range of
 /// dispersion.</para>
@@ -70,7 +70,7 @@ public class Asteroid : PoolableGameObject, IBreakable, IScorable
             shard.LinearVelocity = Complex.Multiply(LinearVelocity, ref angularOffset) * ShardAcceleration;
             shard.AngularVelocity = RandomUtils.Random.NextSingle(MinShardAngularVelocity, MaxShardAngularVelocity);
             shard.Position = Position + RandomUtils.Random.NextVector(0, scatterDistance);
-            Model.Add(shard);
+            Model.Instance.Stage.Add(shard);
         }
     }
 
@@ -86,10 +86,8 @@ public class Asteroid : PoolableGameObject, IBreakable, IScorable
         Broken?.Invoke(this, EventArgs.Empty);
     }
 
-    protected override void OnRemoved()
+    public override void OnRemoved()
     {
-        base.OnRemoved();
-
         ReturnToPool();
     }
 

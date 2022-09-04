@@ -16,5 +16,5 @@
  
 using MonoAsteroids;
 
-using var game = new MonoAsteroidsGame();
+using var game = MonoAsteroidsGame.Instance;
 game.Run();

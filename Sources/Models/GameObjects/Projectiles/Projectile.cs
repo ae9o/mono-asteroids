@@ -41,10 +41,8 @@ public abstract class Projectile : PoolableGameObject
         LinearVelocity = direction * Speed;
     }
 
-    protected override void OnFlewOutOfWorld()
+    protected override void OnFlewOutOfStage()
     {
-        base.OnFlewOutOfWorld();
-
         Remove();
     }
 
@@ -63,10 +61,8 @@ public abstract class Projectile : PoolableGameObject
         return base.OnCollisionValidating(sender, other, contact);
     }
 
-    protected override void OnRemoved()
+    public override void OnRemoved()
     {
-        base.OnRemoved();
-
         ReturnToPool();
     }
 

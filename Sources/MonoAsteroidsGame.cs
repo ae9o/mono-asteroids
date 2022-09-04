@@ -23,12 +23,18 @@ namespace MonoAsteroids;
 /// </summary>
 public class MonoAsteroidsGame : Game
 {
+    #region Singleton
+    private static readonly MonoAsteroidsGame _instance = new MonoAsteroidsGame();
+    public static MonoAsteroidsGame Instance => _instance;
+    static MonoAsteroidsGame() {}
+    #endregion
+
     private const int DefaultBackBufferWidth = 1280;
     private const int DefaultBackBufferHeight = 720;
 
     private readonly GraphicsDeviceManager _graphics;
 
-    public MonoAsteroidsGame()
+    private MonoAsteroidsGame()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
@@ -42,13 +48,10 @@ public class MonoAsteroidsGame : Game
         _graphics.PreferredBackBufferHeight = DefaultBackBufferHeight;
         _graphics.ApplyChanges();
 
-        var model = new Model(this);
-        var view = new View(this, model);
-        var inputController = new InputController(this, model);
-
-        Components.Add(model);
-        Components.Add(view);
-        Components.Add(inputController);
+        Components.Add(Model.Instance);
+        Components.Add(new StageView(this));
+        Components.Add(new UiView(this));
+        Components.Add(new InputController(this));
 
         base.Initialize();
     }

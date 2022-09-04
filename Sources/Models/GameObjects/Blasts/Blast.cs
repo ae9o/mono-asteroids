@@ -50,10 +50,9 @@ public class Blast : PoolableGameObject
         _removeTimer.Stop();
     }
 
-    protected override void OnAdded()
+    public override void OnAdded()
     {
         base.OnAdded();
-
         _removeTimer.Restart();
     }
 
@@ -62,17 +61,15 @@ public class Blast : PoolableGameObject
         Remove();
     }
 
-    protected override void OnRemoved()
+    public override void OnRemoved()
     {
-        base.OnRemoved();
-
         ReturnToPool();
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-
+        
         _removeTimer.Update(gameTime);
     }
 

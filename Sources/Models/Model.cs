@@ -15,23 +15,41 @@
  */
 
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using tainicom.Aether.Physics2D.Dynamics;
 
 namespace MonoAsteroids;
 
 /// <summary>
-/// This part of the model contains the key logic of the game. Starts a new game round. Manages the calculation of score
-/// points. Tracks the destruction of the player's spaceship.
+/// Implements the key logic of the game.
 /// </summary>
-public partial class Model : GameComponent, IEnumerable<GameObject>
+public partial class Model : GameComponent
 {
+    // The app has only one model, which is used by different subsystems.
+    // It is advisable to make it a singleton.
+    #region Singleton
+    private static readonly Model _instance = new Model(MonoAsteroidsGame.Instance);
+    public static Model Instance => _instance;
+    static Model() {}
+    #endregion
+
+    public const float AsteroidSpawnInterval = 10f;
+    public const float UfoSpawnInterval = 5f;
+    public const int InitialAsteroidCount = 2;
+
+    // The same objects are constantly created and destroyed on the stage.
+    // It is advisable to use pooling for them.
+    private readonly Pool<Asteroid> _largeAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewLargeAsteroid);
+    private readonly Pool<Asteroid> _mediumAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewMediumAsteroid);
+    private readonly Pool<Asteroid> _smallAsteroidPool = new Pool<Asteroid>(GameObjectFactory.NewSmallAsteroid);
+    private readonly Pool<Ufo> _ufoPool = new Pool<Ufo>(GameObjectFactory.NewDefaultUfo);
+
     private ModelState _state;
+    private Stage _stage;
+    private Timers _timers;
     private Starship _starship;
     private int _score;
 
-    public Model(Game game)
+    private Model(Game game)
         : base(game)
     {
     }
@@ -40,34 +58,38 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
 
     public int Score => _score;
 
+    public Stage Stage => _stage;
+
     public Starship Starship => _starship;
 
     public override void Initialize()
     {
         base.Initialize();
 
-        _world = new World();
-        _world.Gravity = Vector2.Zero;
+        _stage = new Stage();
+        _timers = new Timers();
 
+        _timers.Add(OnAsteroidTimerTick, AsteroidSpawnInterval);
+        _timers.Add(OnUfoTimerTick, UfoSpawnInterval);
+
+        ShowDemo();
+    }
+
+    /// <summary>
+    /// When the app starts, displays the demo activity on the stage.
+    /// </summary>
+    private void ShowDemo()
+    {
         _starship = GameObjectFactory.NewDemoStarship();
-        Add(_starship);
+        _stage.Add(_starship);
 
-        InitializeTimers();
         SpawnInitialAsteroids();
     }
 
     public override void Update(GameTime gameTime)
     {
-        Lock();
-        UpdateTimers(gameTime);
-
-        foreach (var obj in _gameObjects)
-        {
-            obj.Update(gameTime);
-        }
-
-        _world.Step(gameTime.ElapsedGameTime);
-        Unlock();
+        _timers.Update(gameTime);
+        _stage.Update(gameTime);
     }
 
     public void StartRound()
@@ -80,14 +102,14 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         _state = ModelState.RoundStarted;
         _score = 0;
 
-        Clear();
+        _stage.Clear();
 
         _starship = GameObjectFactory.NewDefaultStarship();
-        _starship.Position = WorldCenter;
+        _starship.Position = Stage.StageCenter;
         _starship.Broken += OnStarshipBroken;
-        Add(_starship);
+        _stage.Add(_starship);
 
-        RestartTimers();
+        _timers.Restart();
         SpawnInitialAsteroids();
     }
 
@@ -99,8 +121,69 @@ public partial class Model : GameComponent, IEnumerable<GameObject>
         }
 
         _state = ModelState.RoundFinished;
+        _timers.Stop();
+    }
 
-        StopTimers();
+    private void SpawnInitialAsteroids()
+    {
+        for (int i = 0; i < InitialAsteroidCount; ++i)
+        {
+            SpawnLargeAsteroid();
+        }
+    }
+
+    private void SpawnLargeAsteroid()
+    {
+        _stage.Add(ObtainLargeAsteroid());
+    }
+
+    private void SpawnUfo()
+    {
+        _stage.Add(ObtainUfo());
+    }
+
+    private Asteroid ObtainLargeAsteroid()
+    {
+        var asteroid = _largeAsteroidPool.Obtain();
+        asteroid.Position = RandomUtils.Random.NextPositionOutsideWorld(Stage.StageWidth, Stage.StageHeight,
+                asteroid.Size);
+        asteroid.ShardSupplier = ObtainMediumAsteroid;
+        asteroid.Broken += OnScorableObjectBroken;
+        return asteroid;
+    }
+
+    private Asteroid ObtainMediumAsteroid()
+    {
+        var asteroid = _mediumAsteroidPool.Obtain();
+        asteroid.ShardSupplier = ObtainSmallAsteroid;
+        asteroid.Broken += OnScorableObjectBroken;
+        return asteroid;
+    }
+
+    private Asteroid ObtainSmallAsteroid()
+    {
+        var asteroid = _smallAsteroidPool.Obtain();
+        asteroid.Broken += OnScorableObjectBroken;
+        return asteroid;
+    }
+
+    private Ufo ObtainUfo()
+    {
+        var ufo = _ufoPool.Obtain();
+        ufo.Position = RandomUtils.Random.NextPositionOutsideWorld(Stage.StageWidth, Stage.StageHeight, ufo.Size);
+        ufo.Target = _starship;
+        ufo.Broken += OnScorableObjectBroken;
+        return ufo;
+    }
+
+    private void OnAsteroidTimerTick(object sender, EventArgs e)
+    {
+        SpawnLargeAsteroid();
+    }
+
+    private void OnUfoTimerTick(object sender, EventArgs e)
+    {
+        SpawnUfo();
     }
 
     private void OnStarshipBroken(GameObject sender, EventArgs e)

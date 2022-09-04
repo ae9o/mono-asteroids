@@ -14,47 +14,49 @@
  * limitations under the License.
  */
 
+using System;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.Timers;
+using MonoGame.Extended.Collections;
 
 namespace MonoAsteroids;
 
 /// <summary>
-/// A UFO that pursues the player's spaceship.
+/// Manages all game timers.
 /// </summary>
-public class Ufo : Spacecraft, IScorable
+public class Timers
 {
-    public GameObject Target { get; set; }
+    private readonly Bag<GameTimer> _timers = new Bag<GameTimer>();
 
-    public int ScorePoints { get; set; }
-
-    public override void Update(GameTime gameTime)
+    public void Add(EventHandler OnTick, float interval)
     {
-        base.Update(gameTime);
-
-        PursueTarget();
+        var timer = new ContinuousClock(interval);
+        timer.Tick += OnTick;
+        timer.Stop();
+        _timers.Add(timer);
     }
 
-    public void PursueTarget()
+    public void Stop()
     {
-        Engage(GetTargetDirection());
-    }
-
-    private Vector2 GetTargetDirection()
-    {
-        if (Target == null)
+        foreach (var timer in _timers)
         {
-            return Vector2.Zero;
+            timer.Stop();
         }
-
-        var direction = Target.Position - Position;
-        direction.Normalize();
-        return direction;
     }
 
-    public override void Reset()
+    public void Restart()
     {
-        base.Reset();
+        foreach (var timer in _timers)
+        {
+            timer.Restart();
+        }
+    }
 
-        Target = null;
+    public void Update(GameTime gameTime)
+    {
+        foreach (var timer in _timers)
+        {
+            timer.Update(gameTime);
+        }
     }
 }

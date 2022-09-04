@@ -34,16 +34,13 @@ public class InputController : GameComponent
 {
     public const Keys ButtonToStartRound = Keys.Space;
 
-    private readonly Model _model;
-
     private readonly Dictionary<Keys, Action<GameTime>> _keyboardHandlers = new Dictionary<Keys, Action<GameTime>>();
     private Action<GameTime> _leftButtonMouseHandler;
     private Action<GameTime> _rightButtonMouseHandler;
 
-    public InputController(Game game, Model model)
+    public InputController(Game game)
         : base(game)
     {
-        _model = model;
     }
 
     public override void Initialize()
@@ -70,11 +67,11 @@ public class InputController : GameComponent
         var keyboard = Keyboard.GetState();
         var mouse = Mouse.GetState();
 
-        if (_model.State != ModelState.RoundStarted)
+        if (Model.Instance.State != ModelState.RoundStarted)
         {
             if (keyboard.IsKeyDown(ButtonToStartRound))
             {
-                _model.StartRound();
+                Model.Instance.StartRound();
             }
             return;
         }
@@ -109,26 +106,26 @@ public class InputController : GameComponent
 
     public void EngageStarship(GameTime gameTime)
     {
-        _model.Starship.Engage();
+        Model.Instance.Starship.Engage();
     }
 
     public void RotateStarshipLeft(GameTime gameTime)
     {
-        _model.Starship.RotateLeft((float)gameTime.ElapsedGameTime.TotalSeconds);
+        Model.Instance.Starship.RotateLeft((float)gameTime.ElapsedGameTime.TotalSeconds);
     }
 
     public void RotateStarshipRight(GameTime gameTime)
     {
-        _model.Starship.RotateRight((float)gameTime.ElapsedGameTime.TotalSeconds);
+        Model.Instance.Starship.RotateRight((float)gameTime.ElapsedGameTime.TotalSeconds);
     }
 
     public void FireBullet(GameTime gameTime)
     {
-        _model.Starship.MachineGun.Fire();
+        Model.Instance.Starship.MachineGun.Fire();
     }
 
     public void FireLaser(GameTime gameTime)
     {
-        _model.Starship.LaserGun.Fire();
+        Model.Instance.Starship.LaserGun.Fire();
     }
 }

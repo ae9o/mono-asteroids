@@ -22,8 +22,7 @@ namespace MonoAsteroids;
 
 /// <summary>
 ///
-/// <para>The base class for a game weapon. Allows to shoot the specified type of ammo. This is a customizable property.
-/// </para>
+/// <para>The base class for a weapon. Allows to shoot the specified type of ammo. This is a customizable property.</para>
 ///
 /// <para>Allows to set a cooldown that limits the intensity of shooting.</para>
 ///
@@ -81,7 +80,7 @@ public class Gun<T>
         projectile.Position = _parent.Position;
         projectile.Rotation = _parent.Rotation;
         projectile.Fire(_parent.LookDirection);
-        _parent.Model.Add(projectile);
+        Model.Instance.Stage.Add(projectile);
     }
 
     public virtual void Update(GameTime gameTime)

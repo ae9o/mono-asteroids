@@ -17,12 +17,12 @@
 namespace MonoAsteroids;
 
 /// <summary>
-/// This enum defines a list of all model states.
+/// Defines a list of all model states.
 /// </summary>
 public enum ModelState
 {
     /// <summary>
-    /// The model can be in this state only after the start of the app, when not a single round has been played yet.
+    /// The model can be in this state only after the start of the app, when not a single round has been played.
     /// </summary>
     Fresh,
 

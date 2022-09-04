@@ -22,8 +22,7 @@ using tainicom.Aether.Physics2D.Dynamics;
 namespace MonoAsteroids;
 
 /// <summary>
-/// This factory is responsible for creating new instances of various pre-configured game objects: different-sized
-/// asteroids, spaceships and UFOs.
+/// This factory is responsible for creating new instances of various pre-configured game objects.
 /// </summary>
 public static class GameObjectFactory
 {
@@ -48,7 +47,7 @@ public static class GameObjectFactory
     {
         Starship starship = new Starship();
         starship.Size = new Vector2(0.1f, 0.1f);
-        starship.Position = RandomUtils.Random.NextPositionOutsideWorld(Model.WorldWidth, Model.WorldHeight,
+        starship.Position = RandomUtils.Random.NextPositionOutsideWorld(Stage.StageWidth, Stage.StageHeight,
                 starship.Size);
         starship.LinearVelocity = new Vector2(0.2f, -0.2f);
         starship.Rotation = 0.75f;

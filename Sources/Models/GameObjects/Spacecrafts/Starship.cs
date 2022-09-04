@@ -53,7 +53,7 @@ public class Starship : Spacecraft
 
     protected override bool OnCollisionValidating(Fixture sender, Fixture other, Contact contact)
     {
-        Break(this);
+        Break((GameObject)other.Body);
 
         return base.OnCollisionValidating(sender, other, contact);
     }

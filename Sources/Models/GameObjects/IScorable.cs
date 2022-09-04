@@ -16,6 +16,9 @@
 
 namespace MonoAsteroids;
 
+/// <summary>
+/// This interface should be implemented by objects, for the destruction of which the player will receive score points.
+/// </summary>
 public interface IScorable
 {
     int ScorePoints { get; set; }

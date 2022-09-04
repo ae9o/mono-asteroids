@@ -25,11 +25,14 @@ using FontStashSharp;
 namespace MonoAsteroids;
 
 /// <summary>
-/// This part of the view is responsible for drawing the user interface.
+/// Draws the UI.
 /// </summary>
-public partial class View : DrawableGameComponent
+public class UiView : DrawableGameComponent
 {
-    private readonly ResourceManager _rm = new ResourceManager("MonoAsteroids.View", Assembly.GetExecutingAssembly());
+    private readonly ResourceManager _rm = new ResourceManager("MonoAsteroids.UiView", Assembly.GetExecutingAssembly());
+
+    private float _scaleX;
+    private float _scaleY;
 
     private Desktop _desktop;
 
@@ -47,15 +50,24 @@ public partial class View : DrawableGameComponent
     private Panel _finalStatsPanel;
     private Label _finalScoreLabel;
 
-    private void LoadUi()
+    public UiView(Game game)
+        : base(game)
+    {
+    }
+
+    protected override void LoadContent()
     {
         MyraEnvironment.Game = Game;
+
+        var viewport = Game.GraphicsDevice.Viewport;
+        _scaleX = viewport.Width / Stage.StageWidth;
+        _scaleY = viewport.Height / Stage.StageHeight;
 
         CreateFonts();
         CreateDesktop();
     }
 
-    private void UnloadUi()
+    protected override void UnloadContent()
     {
         _fontSystem.Dispose();
     }
@@ -209,7 +221,7 @@ public partial class View : DrawableGameComponent
     {
         base.Update(gameTime);
 
-        switch (_model.State)
+        switch (Model.Instance.State)
         {
             case ModelState.RoundStarted:
                 HideWelcomePanels();
@@ -240,51 +252,51 @@ public partial class View : DrawableGameComponent
     private void ShowFinalStats()
     {
         _finalStatsPanel.Visible = true;
-        _finalScoreLabel.Text = string.Format(_rm.GetString("FinalScore"), _model.Score);
+        _finalScoreLabel.Text = string.Format(_rm.GetString("FinalScore"), Model.Instance.Score);
     }
 
     private void UpdateScore()
     {
-        _scoreLabel.Text = string.Format(_rm.GetString("Score"), _model.Score);
+        _scoreLabel.Text = string.Format(_rm.GetString("Score"), Model.Instance.Score);
     }
 
     private void UpdateLaserAmmo()
     {
-        var laserGun = _model.Starship.LaserGun;
+        var laserGun = Model.Instance.Starship.LaserGun;
         _laserAmmoBar.Maximum = laserGun.MaxCharge;
         _laserAmmoBar.Value = laserGun.CurrentCharge;
     }
 
     private void UpdateLaserCooldown()
     {
-        var laserGun = _model.Starship.LaserGun;
+        var laserGun = Model.Instance.Starship.LaserGun;
         _laserCooldownBar.Value = (float) laserGun.ChargingPercent;
         _laserCooldownBar.Visible = laserGun.CurrentCharge < laserGun.MaxCharge;
     }
 
     private void UpdateCoords()
     {
-        var coords = _model.Starship.Position;
+        var coords = Model.Instance.Starship.Position;
         _positionLabel.Text = string.Format(_rm.GetString("Position"), coords.X * _scaleX, coords.Y * _scaleY);
     }
 
     private void UpdateAngle()
     {
-        var starship = _model.Starship;
+        var starship = Model.Instance.Starship;
         var angle = -MathHelper.ToDegrees(MathHelper.WrapAngle(starship.Rotation - MathHelper.PiOver2));
         _angleLabel.Text = string.Format(_rm.GetString("Angle"), angle);
     }
 
     private void UpdateSpeed()
     {
-        var starship = _model.Starship;
+        var starship = Model.Instance.Starship;
         var velocity = starship.LinearVelocity;
         velocity.X *= _scaleX;
         velocity.Y *= _scaleY;
         _speedLabel.Text = string.Format(_rm.GetString("Speed"), velocity.Length());
     }
 
-    public void DrawUi()
+    public override void Draw(GameTime gameTime)
     {
         _desktop.Render();
     }

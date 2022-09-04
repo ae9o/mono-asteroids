@@ -22,16 +22,46 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MonoAsteroids;
 
 /// <summary>
-/// This part of the view is responsible for drawing game objects.
+/// Draws the content of the game stage.
 /// </summary>
-public partial class View : DrawableGameComponent
+public class StageView : DrawableGameComponent
 {
     private readonly Dictionary<Type, IDrawable> _drawables = new Dictionary<Type, IDrawable>();
     private Texture2D _backgroundTexture;
+    private Matrix _viewportScaleMatrix;
+    private SpriteBatch _spriteBatch;
+    private Vector2 _viewportSize;
+    private float _scaleX;
+    private float _scaleY;
 
-    private void LoadDrawables()
+    public StageView(Game game)
+        : base(game)
+    {
+    }
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        ScaleViewport();
+    }
+
+    private void ScaleViewport()
+    {
+        var viewport = Game.GraphicsDevice.Viewport;
+        _viewportSize.X = viewport.Width;
+        _viewportSize.Y = viewport.Height;
+
+        _scaleX = viewport.Width / Stage.StageWidth;
+        _scaleY = viewport.Height / Stage.StageHeight;
+        _viewportScaleMatrix = Matrix.CreateScale(_scaleX, _scaleY, 1.0f);
+    }
+
+    protected override void LoadContent()
     {
         var content = Game.Content;
+
+        _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
         _backgroundTexture = content.Load<Texture2D>("Backgrounds/Space");
 
@@ -43,10 +73,8 @@ public partial class View : DrawableGameComponent
         _drawables.Add(typeof(Blast), new TextureDrawable(content, "Sprites/BlastSprite"));
     }
 
-    private void UnloadDrawables()
+    protected override void UnloadContent()
     {
-        _backgroundTexture.Dispose();
-
         foreach (var drawable in _drawables)
         {
             if (drawable.Value is IDisposable)
@@ -55,10 +83,14 @@ public partial class View : DrawableGameComponent
             }
         }
         _drawables.Clear();
+
+        _backgroundTexture.Dispose();
+        _spriteBatch.Dispose();
     }
 
-    private void DrawWorld()
+    public override void Draw(GameTime gameTime)
     {
+        Game.GraphicsDevice.Clear(Color.Black);
         DrawBackground();
         DrawGameObjects();
     }
@@ -87,7 +119,7 @@ public partial class View : DrawableGameComponent
     private void DrawGameObjects()
     {
         _spriteBatch.Begin(transformMatrix: _viewportScaleMatrix);
-        foreach (var obj in _model)
+        foreach (var obj in Model.Instance.Stage)
         {
             _drawables[obj.GetType()].Draw(_spriteBatch, obj);
         }

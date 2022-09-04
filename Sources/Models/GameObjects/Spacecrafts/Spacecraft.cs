@@ -64,7 +64,7 @@ public class Spacecraft : PoolableGameObject, IBreakable
             var blast = BlastSupplier();
             blast.Position = Position;
             blast.Size = Size;
-            Model.Add(blast);
+            Model.Instance.Stage.Add(blast);
         }
 
         OnBroken();
@@ -76,10 +76,8 @@ public class Spacecraft : PoolableGameObject, IBreakable
         Broken?.Invoke(this, EventArgs.Empty);
     }
 
-    protected override void OnRemoved()
+    public override void OnRemoved()
     {
-        base.OnRemoved();
-
         ReturnToPool();
     }
 

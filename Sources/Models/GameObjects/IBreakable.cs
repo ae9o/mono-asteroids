@@ -17,7 +17,7 @@
 namespace MonoAsteroids;
 
 /// <summary>
-/// This interface should implement objects that can be broken during the game.
+/// This interface should be implemented by objects that can be broken during the game.
 /// </summary>
 public interface IBreakable
 {
